@@ -273,15 +273,25 @@ impl PlantActor for TickerPlant {
 
                 stop = true;
             }
-            Ok(Message::Binary(data)) => {
-                let response = self.rithmic_receiver_api.buf_to_message(data).unwrap();
-
-                if response.is_update {
-                    self.subscription_sender.send(response).unwrap();
-                } else {
-                    self.request_handler.handle_response(response);
+            Ok(Message::Binary(data)) => match self.rithmic_receiver_api.buf_to_message(data) {
+                Ok(response) => {
+                    if response.is_update {
+                        self.subscription_sender.send(response).unwrap();
+                    } else {
+                        self.request_handler.handle_response(response);
+                    }
                 }
-            }
+                Err(err) => {
+                    event!(Level::ERROR, "ticker_plant: error response from server: {:?}", err);
+
+                    // Heartbeat errors indicate connection health issues - send via subscription
+                    if matches!(err.message, RithmicMessage::ResponseHeartbeat(_)) {
+                        let _ = self.subscription_sender.send(err);
+                    } else {
+                        self.request_handler.handle_response(err);
+                    }
+                }
+            },
             Err(Error::ConnectionClosed) => {
                 event!(Level::INFO, "ticker_plant connection closed");
 
