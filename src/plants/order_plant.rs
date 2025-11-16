@@ -12,7 +12,7 @@ use crate::{
         rithmic_command_types::{RithmicBracketOrder, RithmicCancelOrder, RithmicModifyOrder},
         sender_api::RithmicSenderApi,
     },
-    connection_info::{self, AccountInfo},
+    config::RithmicConfig,
     request_handler::{RithmicRequest, RithmicRequestHandler},
     rti::{messages::RithmicMessage, request_login::SysInfraType},
     ws::{HEARTBEAT_SECS, PlantActor, RithmicStream, connect_with_retry, get_heartbeat_interval},
@@ -199,15 +199,15 @@ impl RithmicOrderPlant {
     /// Create a new Order Plant connection
     ///
     /// # Arguments
-    /// * `account_info` - Account credentials and environment settings
+    /// * `config` - Rithmic configuration with account credentials and environment settings
     ///
     /// # Returns
     /// A new `RithmicOrderPlant` instance connected to the Rithmic server
-    pub async fn new(account_info: &AccountInfo) -> RithmicOrderPlant {
+    pub async fn new(config: &RithmicConfig) -> RithmicOrderPlant {
         let (req_tx, req_rx) = mpsc::channel::<OrderPlantCommand>(64);
         let (sub_tx, _sub_rx) = broadcast::channel(10_000);
 
-        let mut order_plant = OrderPlant::new(req_rx, sub_tx.clone(), account_info)
+        let mut order_plant = OrderPlant::new(req_rx, sub_tx.clone(), config)
             .await
             .unwrap();
 
@@ -235,7 +235,7 @@ impl RithmicStream for RithmicOrderPlant {
 }
 
 pub struct OrderPlant {
-    config: connection_info::RithmicConnectionInfo,
+    config: RithmicConfig,
     interval: Interval,
     logged_in: bool,
     request_handler: RithmicRequestHandler,
@@ -254,17 +254,15 @@ impl OrderPlant {
     pub async fn new(
         request_receiver: mpsc::Receiver<OrderPlantCommand>,
         subscription_sender: broadcast::Sender<RithmicResponse>,
-        account_info: &AccountInfo,
+        config: &RithmicConfig,
     ) -> Result<OrderPlant, String> {
-        let config = connection_info::get_config(&account_info.env);
-
         let ws_stream = connect_with_retry(&config.url, &config.beta_url, 15)
             .await
             .expect("failed to connect to order plant");
 
         let (rithmic_sender, rithmic_reader) = ws_stream.split();
 
-        let rithmic_sender_api = RithmicSenderApi::new(account_info);
+        let rithmic_sender_api = RithmicSenderApi::new(config);
         let rithmic_receiver_api = RithmicReceiverApi {
             source: "order_plant".to_string(),
         };
@@ -272,7 +270,7 @@ impl OrderPlant {
         let interval = get_heartbeat_interval(None);
 
         Ok(OrderPlant {
-            config,
+            config: config.clone(),
             interval,
             logged_in: false,
             request_handler: RithmicRequestHandler::new(),

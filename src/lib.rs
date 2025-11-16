@@ -21,7 +21,9 @@
 //! - `ws`: WebSocket connectivity layer
 
 pub mod api;
-/// Connection information and configuration
+/// Modern, streamlined configuration API (recommended)
+pub mod config;
+/// Deprecated connection information types (use `config` module instead)
 pub mod connection_info;
 /// Plants for handling different types of market data and order interactions
 pub mod plants;
@@ -36,3 +38,6 @@ pub use plants::history_plant::{RithmicHistoryPlant, RithmicHistoryPlantHandle};
 pub use plants::order_plant::{RithmicOrderPlant, RithmicOrderPlantHandle};
 pub use plants::pnl_plant::{RithmicPnlPlant, RithmicPnlPlantHandle};
 pub use plants::ticker_plant::{RithmicTickerPlant, RithmicTickerPlantHandle};
+
+// Re-export modern configuration types for convenience
+pub use config::{ConfigError, RithmicConfig, RithmicEnv};

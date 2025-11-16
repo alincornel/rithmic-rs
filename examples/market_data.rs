@@ -3,38 +3,24 @@ use std::env;
 use tracing::{Level, event, info};
 
 use rithmic_rs::{
-    RithmicTickerPlant,
-    connection_info::{AccountInfo, RithmicConnectionSystem},
-    rti::messages::RithmicMessage,
-    ws::RithmicStream,
+    RithmicConfig, RithmicEnv, RithmicTickerPlant, rti::messages::RithmicMessage, ws::RithmicStream,
 };
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Before running this example, copy .env.blank to .env
     // and fill in RITHMIC_ACCOUNT_ID, FCM_ID, and IB_ID
-    dotenv::dotenv().ok();
+
+    // Simple one-line configuration from environment variables (.env file)
+    let config = RithmicConfig::from_dotenv(RithmicEnv::Demo)?;
 
     tracing_subscriber::fmt().init();
-
-    let account_id = env::var("RITHMIC_ACCOUNT_ID")
-        .expect("RITHMIC_ACCOUNT_ID must be set in environment variables");
-
-    let fcm_id = env::var("FCM_ID").expect("RITHMIC_FCM_ID must be set in environment variables");
-    let ib_id = env::var("IB_ID").expect("RITHMIC_IB_ID must be set in environment variables");
-
-    let account_info = AccountInfo {
-        account_id,
-        env: RithmicConnectionSystem::Demo,
-        fcm_id,
-        ib_id,
-    };
 
     // Symbol and exchange can be customized here
     let symbol = env::var("SYMBOL").unwrap_or_else(|_| "ZNU5".to_string());
     let exchange = env::var("EXCHANGE").unwrap_or_else(|_| "CBOT".to_string());
 
-    let ticker_plant = RithmicTickerPlant::new(&account_info).await;
+    let ticker_plant = RithmicTickerPlant::new(&config).await;
     let mut handle = ticker_plant.get_handle();
 
     handle.login().await?;
