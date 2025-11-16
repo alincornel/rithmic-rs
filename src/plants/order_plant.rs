@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use tracing::{Level, event};
+use tracing::{Level, error, event, warn};
 
 use tokio_tungstenite::{
     MaybeTlsStream,
@@ -93,19 +93,28 @@ pub enum OrderPlantCommand {
 /// - Receive real-time order status updates
 /// - Track positions and execution reports
 ///
-/// # Example
+/// # Connection Health Monitoring
+///
+/// The subscription receiver provides ALL connection health events, including:
+/// - **Heartbeat responses**: Monitor connection health by checking for errors
+/// - **Forced logout events**: Server-initiated disconnections requiring reconnection
+/// - **Order notifications**: Real-time order fills, cancellations, and status changes
+///
+/// All messages are delivered through the `subscription_receiver` channel. Always check
+/// the `error` field on responses - particularly heartbeats - to detect connection issues.
+///
+/// # Example: Basic Usage
 ///
 /// ```no_run
 /// use rithmic_rs::{
 ///     connection_info::{AccountInfo, RithmicConnectionSystem},
 ///     plants::order_plant::RithmicOrderPlant,
-///     api::rithmic_command_types::{RithmicBracketOrder, OrderType, Side}
+///     api::rithmic_command_types::{RithmicBracketOrder, OrderType, Side},
+///     rti::messages::RithmicMessage,
 /// };
-/// use tokio::time::{sleep, Duration};
 ///
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
-///     // Step 1: Create connection credentials
 ///     let account_info = AccountInfo {
 ///         account_id: "your_account".to_string(),
 ///         env: RithmicConnectionSystem::Demo,
@@ -113,24 +122,14 @@ pub enum OrderPlantCommand {
 ///         ib_id: "your_ib".to_string(),
 ///     };
 ///
-///     // Step 2: Create the order plant instance
 ///     let order_plant = RithmicOrderPlant::new(&account_info).await;
-///
-///     // Step 3: Get a handle to interact with the plant
 ///     let handle = order_plant.get_handle();
 ///
-///     // Step 4: Login to the order plant
 ///     handle.login().await?;
-///
-///     // Step 5: Subscribe to order updates
 ///     handle.subscribe_order_updates().await?;
 ///     handle.subscribe_bracket_updates().await?;
 ///
-///     // Step 6: Get account information
-///     let accounts = handle.get_account_list().await?;
-///     println!("Available accounts: {:?}", accounts);
-///
-///     // Step 7: Place a bracket order
+///     // Place a bracket order
 ///     let bracket_order = RithmicBracketOrder {
 ///         account: "your_account".to_string(),
 ///         symbol: "ESM1".to_string(),
@@ -139,29 +138,54 @@ pub enum OrderPlantCommand {
 ///         side: Side::Buy,
 ///         order_type: OrderType::Limit,
 ///         price: 4500.00,
-///         stop_ticks: 4,    // 4 ticks for stop loss
-///         target_ticks: 8,  // 8 ticks for profit target
+///         stop_ticks: 4,
+///         target_ticks: 8,
 ///         tif: "Day".to_string(),
 ///     };
 ///
-///     let order_result = handle.place_bracket_order(bracket_order).await?;
-///     println!("Order placement result: {:?}", order_result);
+///     handle.place_bracket_order(bracket_order).await?;
 ///
-///     // Step 8: Monitor order updates
-///     for _ in 0..5 {
+///     // Monitor order updates with error handling
+///     loop {
 ///         match handle.subscription_receiver.recv().await {
 ///             Ok(update) => {
+///                 // Check for connection health issues
+///                 if let Some(error) = &update.error {
+///                     eprintln!("Error from {}: {}", update.source, error);
+///
+///                     if matches!(update.message, RithmicMessage::ResponseHeartbeat(_)) {
+///                         eprintln!("Heartbeat error - connection degraded");
+///                         // Implement reconnection logic
+///                         break;
+///                     }
+///                     continue;
+///                 }
+///
 ///                 match update.message {
-///                     RithmicMessage::RithmicOrderNotification(u) => {}
-///                     RithmicMessage::ExchangeOrderNotification(u) => {}
+///                     RithmicMessage::RithmicOrderNotification(order) => {
+///                         println!("Order notification: {:?}", order);
+///                     }
+///                     RithmicMessage::ExchangeOrderNotification(order) => {
+///                         println!("Exchange notification: {:?}", order);
+///                     }
+///                     RithmicMessage::ResponseHeartbeat(_) => {
+///                         // Connection healthy
+///                     }
+///                     RithmicMessage::ForcedLogout(_) => {
+///                         eprintln!("Forced logout - must reconnect");
+///                         break;
+///                     }
 ///                     _ => {}
-///                 },
+///                 }
 ///             }
+///             Err(e) => {
+///                 eprintln!("Channel error: {}", e);
+///                 break;
+///             }
+///         }
 ///     }
 ///
-///     // Step 9: Disconnect when done
 ///     handle.disconnect().await?;
-///
 ///     Ok(())
 /// }
 /// ```
@@ -308,15 +332,27 @@ impl PlantActor for OrderPlant {
             Ok(Message::Binary(data)) => match self.rithmic_receiver_api.buf_to_message(data) {
                 Ok(response) => {
                     if response.is_update {
-                        self.subscription_sender.send(response).unwrap();
+                        match self.subscription_sender.send(response) {
+                            Ok(_) => {}
+                            Err(e) => {
+                                warn!("order_plant: no active subscribers: {:?}", e);
+                            }
+                        }
                     } else {
                         self.request_handler.handle_response(response);
                     }
                 }
-                Err(err) => {
-                    event!(Level::ERROR, "order_plant: response from server: {:?}", err);
+                Err(err_response) => {
+                    error!(
+                        "order_plant: error response from server: {:?}",
+                        err_response
+                    );
 
-                    self.request_handler.handle_response(err);
+                    if err_response.is_update {
+                        let _ = self.subscription_sender.send(err_response);
+                    } else {
+                        self.request_handler.handle_response(err_response);
+                    }
                 }
             },
             Err(Error::ConnectionClosed) => {

@@ -89,7 +89,7 @@ impl RithmicReceiverApi {
                 RithmicResponse {
                     request_id: "".to_string(),
                     message: RithmicMessage::ResponseHeartbeat(resp),
-                    is_update: false,
+                    is_update: true, // Heartbeats are connection health events - route to subscription channel
                     has_more: false,
                     multi_response: false,
                     error,
@@ -116,7 +116,7 @@ impl RithmicReceiverApi {
                 RithmicResponse {
                     request_id: "".to_string(),
                     message: RithmicMessage::ForcedLogout(resp),
-                    is_update: false,
+                    is_update: true, // Forced logout is a connection health event - route to subscription channel
                     has_more: false,
                     multi_response: false,
                     error: Some("forced logout from server".to_string()),

@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use tracing::{Level, event};
+use tracing::{Level, error, event, warn};
 
 use crate::{
     api::{
@@ -74,55 +74,160 @@ pub enum TickerPlantCommand {
 /// Currently the following market data updates are supported:
 /// - Last trades
 /// - Best bid and offer (BBO)
+/// - Order book depth-by-order updates
 ///
-/// * NOTE: Feel free to add missing ones and contribute back.
+/// # Connection Health Monitoring
 ///
-/// # Example
+/// The subscription receiver provides ALL connection health events, including:
+/// - **Heartbeat responses**: Monitor connection health by checking for errors
+/// - **Forced logout events**: Server-initiated disconnections requiring reconnection
+/// - **Market data updates**: Real-time trade and quote data
+///
+/// All messages are delivered through the `subscription_receiver` channel. Always check
+/// the `error` field on responses - particularly heartbeats - to detect connection issues.
+///
+/// # Example: Basic Usage
 ///
 /// ```no_run
-/// use rithmic_rs::{connection_info::AccountInfo, plants::ticker_plant::RithmicTickerPlant};
-/// use tokio::time::{sleep, Duration};
+/// use rithmic_rs::{
+///     connection_info::AccountInfo,
+///     plants::ticker_plant::RithmicTickerPlant,
+///     rti::messages::RithmicMessage,
+/// };
 ///
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
-///     // Step 1: Create connection credentials
+///     // Create connection credentials
 ///     let account_info = AccountInfo {
 ///         account_id: "your_account".to_string(),
-///         env: RithmicConnectionSystem::Demo,
+///         env: rithmic_rs::connection_info::RithmicConnectionSystem::Demo,
 ///         fcm_id: "your_fcm".to_string(),
 ///         ib_id: "your_ib".to_string(),
 ///     };
 ///
-///     // Step 2: Create the ticker plant instance
+///     // Create the ticker plant instance
 ///     let ticker_plant = RithmicTickerPlant::new(&account_info).await;
-///
-///     // Step 3: Get a handle to interact with the plant
 ///     let handle = ticker_plant.get_handle();
 ///
-///     // Step 4: Login to the ticker plant
+///     // Login to the ticker plant
 ///     handle.login().await?;
 ///
-///     // Step 5: Subscribe to market data for a symbol
-///     let subscription_result = handle.subscribe("ESM1", "CME").await?;
-///     println!("Subscription successful: {:?}", subscription_result);
+///     // Subscribe to market data for a symbol
+///     handle.subscribe("ESM1", "CME").await?;
 ///
-///     // Step 6: Process incoming market data updates
-///     for _ in 0..10 {
+///     // Process incoming updates
+///     loop {
 ///         match handle.subscription_receiver.recv().await {
 ///             Ok(update) => {
+///                 // Always check for errors (especially on heartbeats)
+///                 if let Some(error) = &update.error {
+///                     eprintln!("Error from {}: {}", update.source, error);
+///
+///                     // Connection health issue - decide whether to reconnect
+///                     if matches!(update.message, RithmicMessage::ResponseHeartbeat(_)) {
+///                         eprintln!("Heartbeat error - connection may be degraded");
+///                         // Implement reconnection logic here
+///                         break;
+///                     }
+///                     continue;
+///                 }
+///
 ///                 match update.message {
-///                     RithmicMessage::LastTrade(u) => {}
-///                     RithmicMessage::BestBidOffer(u) => {}
+///                     RithmicMessage::LastTrade(trade) => {
+///                         println!("Trade: {} @ {}", trade.size, trade.price);
+///                     }
+///                     RithmicMessage::BestBidOffer(bbo) => {
+///                         println!("BBO: {} @ {} / {} @ {}",
+///                             bbo.bid_size, bbo.bid_price,
+///                             bbo.ask_price, bbo.ask_size);
+///                     }
+///                     RithmicMessage::ResponseHeartbeat(_) => {
+///                         // Heartbeat OK - connection healthy
+///                     }
+///                     RithmicMessage::ForcedLogout(logout) => {
+///                         eprintln!("Forced logout: {:?}", logout);
+///                         break; // Must reconnect
+///                     }
 ///                     _ => {}
-///                 },
+///                 }
 ///             }
-///             Err(e) => println!("Error receiving update: {}", e),
+///             Err(e) => {
+///                 eprintln!("Channel error: {}", e);
+///                 break;
+///             }
 ///         }
 ///     }
 ///
-///     // Step 7: Disconnect when done
+///     // Cleanup
 ///     handle.disconnect().await?;
+///     Ok(())
+/// }
+/// ```
 ///
+/// # Example: Robust Connection Health Monitoring
+///
+/// ```no_run
+/// use rithmic_rs::{
+///     connection_info::AccountInfo,
+///     plants::ticker_plant::RithmicTickerPlant,
+///     rti::messages::RithmicMessage,
+/// };
+/// use tokio::time::{Duration, Instant};
+///
+/// #[tokio::main]
+/// async fn main() -> Result<(), Box<dyn std::error::Error>> {
+///     let account_info = AccountInfo {
+///         account_id: "your_account".to_string(),
+///         env: rithmic_rs::connection_info::RithmicConnectionSystem::Demo,
+///         fcm_id: "your_fcm".to_string(),
+///         ib_id: "your_ib".to_string(),
+///     };
+///
+///     let ticker_plant = RithmicTickerPlant::new(&account_info).await;
+///     let handle = ticker_plant.get_handle();
+///     handle.login().await?;
+///     handle.subscribe("ESM1", "CME").await?;
+///
+///     let mut last_heartbeat = Instant::now();
+///     let heartbeat_timeout = Duration::from_secs(60);
+///
+///     loop {
+///         match handle.subscription_receiver.recv().await {
+///             Ok(update) => {
+///                 match update.message {
+///                     RithmicMessage::ResponseHeartbeat(_) => {
+///                         if let Some(error) = &update.error {
+///                             eprintln!("Heartbeat error: {} - reconnection may be needed", error);
+///                             // Implement your reconnection strategy here
+///                         } else {
+///                             last_heartbeat = Instant::now();
+///                         }
+///                     }
+///                     RithmicMessage::ForcedLogout(_) => {
+///                         eprintln!("Server forced logout - must reconnect");
+///                         break;
+///                     }
+///                     RithmicMessage::LastTrade(_) | RithmicMessage::BestBidOffer(_) => {
+///                         // Process market data...
+///                     }
+///                     _ => {}
+///                 }
+///
+///                 // Check for heartbeat timeout
+///                 if last_heartbeat.elapsed() > heartbeat_timeout {
+///                     eprintln!("No heartbeat received in {}s - connection may be dead",
+///                         heartbeat_timeout.as_secs());
+///                     break;
+///                 }
+///             }
+///             Err(e) => {
+///                 eprintln!("Subscription channel error: {}", e);
+///                 break;
+///             }
+///         }
+///     }
+///
+///     handle.disconnect().await?;
 ///     Ok(())
 /// }
 /// ```
@@ -276,19 +381,26 @@ impl PlantActor for TickerPlant {
             Ok(Message::Binary(data)) => match self.rithmic_receiver_api.buf_to_message(data) {
                 Ok(response) => {
                     if response.is_update {
-                        self.subscription_sender.send(response).unwrap();
+                        match self.subscription_sender.send(response) {
+                            Ok(_) => {}
+                            Err(e) => {
+                                warn!("ticker_plant: no active subscribers: {:?}", e);
+                            }
+                        }
                     } else {
                         self.request_handler.handle_response(response);
                     }
                 }
-                Err(err) => {
-                    event!(Level::ERROR, "ticker_plant: error response from server: {:?}", err);
+                Err(err_response) => {
+                    error!(
+                        "ticker_plant: error response from server: {:?}",
+                        err_response
+                    );
 
-                    // Heartbeat errors indicate connection health issues - send via subscription
-                    if matches!(err.message, RithmicMessage::ResponseHeartbeat(_)) {
-                        let _ = self.subscription_sender.send(err);
+                    if err_response.is_update {
+                        let _ = self.subscription_sender.send(err_response);
                     } else {
-                        self.request_handler.handle_response(err);
+                        self.request_handler.handle_response(err_response);
                     }
                 }
             },

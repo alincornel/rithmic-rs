@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use tracing::{Level, event};
+use tracing::{Level, error, event, warn};
 
 use tokio_tungstenite::{
     MaybeTlsStream,
@@ -265,25 +265,24 @@ impl PlantActor for HistoryPlant {
                         match self.subscription_sender.send(response) {
                             Ok(_) => {}
                             Err(e) => {
-                                event!(
-                                    Level::ERROR,
-                                    "history_plant: failed to send response: {:?}",
-                                    e
-                                );
+                                warn!("history_plant: no active subscribers: {:?}", e);
                             }
-                        };
+                        }
                     } else {
-                        self.request_handler.handle_response(response)
+                        self.request_handler.handle_response(response);
                     }
                 }
-                Err(err) => {
-                    event!(
-                        Level::ERROR,
-                        "history_plant: received an error message: {:?}",
-                        err
+                Err(err_response) => {
+                    error!(
+                        "history_plant: error response from server: {:?}",
+                        err_response
                     );
 
-                    self.request_handler.handle_response(err);
+                    if err_response.is_update {
+                        let _ = self.subscription_sender.send(err_response);
+                    } else {
+                        self.request_handler.handle_response(err_response);
+                    }
                 }
             },
             Err(Error::ConnectionClosed) => {
