@@ -1,44 +1,69 @@
-use std::env;
 use tracing::{Level, event};
 
 use rithmic_rs::{
-    RithmicHistoryPlant,
-    connection_info::{AccountInfo, RithmicConnectionSystem},
-    rti::messages::RithmicMessage,
+    RithmicConfig, RithmicEnv, RithmicHistoryPlant, rti::messages::RithmicMessage,
     ws::RithmicStream,
 };
+
+fn parse_args() -> Result<(String, String, i32), Box<dyn std::error::Error>> {
+    let args: Vec<String> = std::env::args().collect();
+
+    let mut symbol = None;
+    let mut exchange = None;
+    let mut start_time_sec = None;
+
+    let mut i = 1;
+    while i < args.len() {
+        match args[i].as_str() {
+            "--symbol" => {
+                i += 1;
+                if i < args.len() {
+                    symbol = Some(args[i].clone());
+                }
+            }
+            "--exchange" => {
+                i += 1;
+                if i < args.len() {
+                    exchange = Some(args[i].clone());
+                }
+            }
+            "--start-time-sec" => {
+                i += 1;
+                if i < args.len() {
+                    start_time_sec = Some(args[i].parse()?);
+                }
+            }
+            _ => {}
+        }
+        i += 1;
+    }
+
+    let symbol = symbol.ok_or("Missing required argument: --symbol")?;
+    let exchange = exchange.ok_or("Missing required argument: --exchange")?;
+    let start_time_sec = start_time_sec.ok_or("Missing required argument: --start-time-sec")?;
+
+    Ok((symbol, exchange, start_time_sec))
+}
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Before running this example, copy .env.blank to .env
     // and fill in RITHMIC_ACCOUNT_ID, FCM_ID, and IB_ID
-    dotenv::dotenv().ok();
+
+    let (symbol, exchange, start_time_sec) = parse_args()?;
+
+    // Simple one-line configuration from environment variables (.env file)
+    let config = RithmicConfig::from_dotenv(RithmicEnv::Demo)?;
 
     tracing_subscriber::fmt().init();
 
-    let account_id = env::var("RITHMIC_ACCOUNT_ID")
-        .expect("RITHMIC_ACCOUNT_ID must be set in environment variables");
-
-    let fcm_id = env::var("FCM_ID").expect("RITHMIC_FCM_ID must be set in environment variables");
-    let ib_id = env::var("IB_ID").expect("RITHMIC_IB_ID must be set in environment variables");
-
-    let account_info = AccountInfo {
-        account_id,
-        env: RithmicConnectionSystem::Demo,
-        fcm_id,
-        ib_id,
-    };
-
-    let history_plant = RithmicHistoryPlant::new(&account_info).await;
+    let history_plant = RithmicHistoryPlant::new(&config).await;
     let handle = history_plant.get_handle();
 
     handle.login().await?;
 
-    // Adjust symbol and time range to match
-    let symbol = "ESU5".to_string(); // Example: ES December 2024 contract
-    let exchange = "CME".to_string();
-    let start_time = 1750370400;
-    let end_time = 1750453200;
+    let start_time = start_time_sec;
+    let end_time = start_time + (23 * 60 * 60); // Add 23 hours in seconds
 
     event!(
         Level::INFO,

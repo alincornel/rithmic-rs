@@ -1,7 +1,7 @@
 use prost::Message;
 
 use crate::{
-    connection_info::{AccountInfo, RithmicConnectionSystem},
+    config::{RithmicConfig, RithmicEnv},
     rti::{
         RequestAccountList, RequestBracketOrder, RequestCancelOrder, RequestDepthByOrderSnapshot,
         RequestDepthByOrderUpdates, RequestExitPosition, RequestHeartbeat, RequestLogin,
@@ -29,19 +29,19 @@ pub const USER_TYPE: i32 = 3;
 #[derive(Debug, Clone)]
 pub struct RithmicSenderApi {
     account_id: String,
-    env: RithmicConnectionSystem,
+    env: RithmicEnv,
     fcm_id: String,
     ib_id: String,
     message_id_counter: u64,
 }
 
 impl RithmicSenderApi {
-    pub fn new(account_info: &AccountInfo) -> Self {
+    pub fn new(config: &RithmicConfig) -> Self {
         RithmicSenderApi {
-            account_id: account_info.account_id.clone(),
-            env: account_info.env.clone(),
-            fcm_id: account_info.fcm_id.clone(),
-            ib_id: account_info.ib_id.clone(),
+            account_id: config.account_id.clone(),
+            env: config.env.clone(),
+            fcm_id: config.fcm_id.clone(),
+            ib_id: config.ib_id.clone(),
             message_id_counter: 0,
         }
     }
@@ -224,9 +224,8 @@ impl RithmicSenderApi {
         let id = self.get_next_message_id();
 
         let trade_route = match self.env {
-            RithmicConnectionSystem::Live => TRADE_ROUTE_LIVE,
-            RithmicConnectionSystem::Demo => TRADE_ROUTE_DEMO,
-            RithmicConnectionSystem::Test => panic!("test environment not supported"),
+            RithmicEnv::Live => TRADE_ROUTE_LIVE,
+            RithmicEnv::Demo | RithmicEnv::Test => TRADE_ROUTE_DEMO, // NOTE: Not sure if this is correct valuef for test environment
         };
 
         let req = RequestNewOrder {
@@ -262,9 +261,8 @@ impl RithmicSenderApi {
         let id = self.get_next_message_id();
 
         let trade_route = match self.env {
-            RithmicConnectionSystem::Live => TRADE_ROUTE_LIVE,
-            RithmicConnectionSystem::Demo => TRADE_ROUTE_DEMO,
-            RithmicConnectionSystem::Test => panic!("test environment not supported"),
+            RithmicEnv::Live => TRADE_ROUTE_LIVE,
+            RithmicEnv::Demo | RithmicEnv::Test => TRADE_ROUTE_DEMO, // NOTE: Not sure if this is correct valuef for test environment
         };
 
         let req = RequestBracketOrder {

@@ -11,7 +11,7 @@ use crate::{
         receiver_api::{RithmicReceiverApi, RithmicResponse},
         sender_api::RithmicSenderApi,
     },
-    connection_info::{self, AccountInfo},
+    config::RithmicConfig,
     request_handler::{RithmicRequest, RithmicRequestHandler},
     rti::{
         messages::RithmicMessage, request_login::SysInfraType, request_time_bar_replay::BarType,
@@ -129,15 +129,15 @@ impl RithmicHistoryPlant {
     /// Create a new History Plant connection
     ///
     /// # Arguments
-    /// * `account_info` - Account credentials and environment settings
+    /// * `config` - Rithmic configuration with account credentials and environment settings
     ///
     /// # Returns
     /// A new `RithmicHistoryPlant` instance connected to the Rithmic server
-    pub async fn new(account_info: &AccountInfo) -> RithmicHistoryPlant {
+    pub async fn new(config: &RithmicConfig) -> RithmicHistoryPlant {
         let (req_tx, req_rx) = mpsc::channel::<HistoryPlantCommand>(32);
         let (sub_tx, _sub_rx) = broadcast::channel::<RithmicResponse>(20_000);
 
-        let mut history_plant = HistoryPlant::new(req_rx, sub_tx.clone(), account_info)
+        let mut history_plant = HistoryPlant::new(req_rx, sub_tx.clone(), config)
             .await
             .unwrap();
 
@@ -167,7 +167,7 @@ impl RithmicStream for RithmicHistoryPlant {
 
 #[derive(Debug)]
 pub struct HistoryPlant {
-    config: connection_info::RithmicConnectionInfo,
+    config: RithmicConfig,
     interval: Interval,
     logged_in: bool,
     request_handler: RithmicRequestHandler,
@@ -187,17 +187,15 @@ impl HistoryPlant {
     pub async fn new(
         request_receiver: mpsc::Receiver<HistoryPlantCommand>,
         subscription_sender: broadcast::Sender<RithmicResponse>,
-        account_info: &AccountInfo,
+        config: &RithmicConfig,
     ) -> Result<HistoryPlant, ()> {
-        let config = connection_info::get_config(&account_info.env);
-
         let ws_stream = connect_with_retry(&config.url, &config.beta_url, 15)
             .await
             .expect("failed to connect to history plant");
 
         let (rithmic_sender, rithmic_reader) = ws_stream.split();
 
-        let rithmic_sender_api = RithmicSenderApi::new(account_info);
+        let rithmic_sender_api = RithmicSenderApi::new(config);
         let rithmic_receiver_api = RithmicReceiverApi {
             source: "history_plant".to_string(),
         };
@@ -205,7 +203,7 @@ impl HistoryPlant {
         let interval = get_heartbeat_interval(None);
 
         Ok(HistoryPlant {
-            config,
+            config: config.clone(),
             interval,
             logged_in: false,
             request_handler: RithmicRequestHandler::new(),
