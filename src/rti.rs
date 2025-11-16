@@ -41,17 +41,7 @@ pub struct RequestLogin {
 }
 /// Nested message and enum types in `RequestLogin`.
 pub mod request_login {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum SysInfraType {
         TickerPlant = 1,
@@ -189,9 +179,7 @@ pub struct ResponseReferenceData {
     #[prost(string, optional, tag = "154844")]
     pub is_tradable: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "154952")]
-    pub is_underlying_for_binary_contrats: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub is_underlying_for_binary_contrats: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(double, optional, tag = "100066")]
     pub strike_price: ::core::option::Option<f64>,
     #[prost(double, optional, tag = "154384")]
@@ -208,17 +196,7 @@ pub struct ResponseReferenceData {
 /// Nested message and enum types in `ResponseReferenceData`.
 pub mod response_reference_data {
     /// bit constants are defined using enum
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PresenceBits {
         ExchangeSymbol = 1,
@@ -268,9 +246,7 @@ pub mod response_reference_data {
                 Self::IsTradable => "IS_TRADABLE",
                 Self::TradingSymbol => "TRADING_SYMBOL",
                 Self::TradingExchange => "TRADING_EXCHANGE",
-                Self::IsUnderlyingForBinaryContracts => {
-                    "IS_UNDERLYING_FOR_BINARY_CONTRACTS"
-                }
+                Self::IsUnderlyingForBinaryContracts => "IS_UNDERLYING_FOR_BINARY_CONTRACTS",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -295,9 +271,7 @@ pub mod response_reference_data {
                 "IS_TRADABLE" => Some(Self::IsTradable),
                 "TRADING_SYMBOL" => Some(Self::TradingSymbol),
                 "TRADING_EXCHANGE" => Some(Self::TradingExchange),
-                "IS_UNDERLYING_FOR_BINARY_CONTRACTS" => {
-                    Some(Self::IsUnderlyingForBinaryContracts)
-                }
+                "IS_UNDERLYING_FOR_BINARY_CONTRACTS" => Some(Self::IsUnderlyingForBinaryContracts),
                 _ => None,
             }
         }
@@ -406,9 +380,17 @@ pub struct ForcedLogout {
 pub struct UserAccountUpdate {
     #[prost(int32, required, tag = "154467")]
     pub template_id: i32,
-    #[prost(enumeration = "user_account_update::UpdateType", optional, tag = "154288")]
+    #[prost(
+        enumeration = "user_account_update::UpdateType",
+        optional,
+        tag = "154288"
+    )]
     pub update_type: ::core::option::Option<i32>,
-    #[prost(enumeration = "user_account_update::AccessType", optional, tag = "154000")]
+    #[prost(
+        enumeration = "user_account_update::AccessType",
+        optional,
+        tag = "154000"
+    )]
     pub access_type: ::core::option::Option<i32>,
     #[prost(string, optional, tag = "154247")]
     pub source_user_id: ::core::option::Option<::prost::alloc::string::String>,
@@ -429,17 +411,7 @@ pub struct UserAccountUpdate {
 }
 /// Nested message and enum types in `UserAccountUpdate`.
 pub mod user_account_update {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum UpdateType {
         Add = 1,
@@ -465,17 +437,7 @@ pub mod user_account_update {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum AccessType {
         ReadOnly = 0,
@@ -526,17 +488,7 @@ pub struct RequestMarketDataUpdate {
 /// Nested message and enum types in `RequestMarketDataUpdate`.
 pub mod request_market_data_update {
     /// bit constants are defined using enum
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum UpdateBits {
         LastTrade = 1,
@@ -607,17 +559,7 @@ pub mod request_market_data_update {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Request {
         Subscribe = 1,
@@ -731,17 +673,7 @@ pub struct ResponseAuxilliaryReferenceData {
 /// Nested message and enum types in `ResponseAuxilliaryReferenceData`.
 pub mod response_auxilliary_reference_data {
     /// bit constants are defined using enum
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PresenceBits {
         SettlementMethod = 1,
@@ -848,17 +780,7 @@ pub struct ResponseGiveTickSizeTypeTable {
 /// Nested message and enum types in `ResponseGiveTickSizeTypeTable`.
 pub mod response_give_tick_size_type_table {
     /// bit constants are defined using enum
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PresenceBits {
         TickSizeFirstPrice = 1,
@@ -990,17 +912,7 @@ pub struct ResponseGetInstrumentByUnderlying {
 /// Nested message and enum types in `ResponseGetInstrumentByUnderlying`.
 pub mod response_get_instrument_by_underlying {
     /// bit constants are defined using enum
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PresenceBits {
         ExchangeSymbol = 1,
@@ -1123,17 +1035,7 @@ pub struct RequestMarketDataUpdateByUnderlying {
 }
 /// Nested message and enum types in `RequestMarketDataUpdateByUnderlying`.
 pub mod request_market_data_update_by_underlying {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum UpdateBits {
         LastTrade = 1,
@@ -1201,17 +1103,7 @@ pub mod request_market_data_update_by_underlying {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Request {
         Subscribe = 1,
@@ -1277,22 +1169,16 @@ pub struct RequestSearchSymbols {
     )]
     pub instrument_type: ::core::option::Option<i32>,
     /// PB_OFFSET + MNM_SEARCH_PATTERN
-    #[prost(enumeration = "request_search_symbols::Pattern", optional, tag = "155008")]
+    #[prost(
+        enumeration = "request_search_symbols::Pattern",
+        optional,
+        tag = "155008"
+    )]
     pub pattern: ::core::option::Option<i32>,
 }
 /// Nested message and enum types in `RequestSearchSymbols`.
 pub mod request_search_symbols {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Pattern {
         Equals = 1,
@@ -1318,17 +1204,7 @@ pub mod request_search_symbols {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum InstrumentType {
         Future = 1,
@@ -1455,9 +1331,7 @@ pub struct ResponseProductCodes {
     pub product_code: ::core::option::Option<::prost::alloc::string::String>,
     /// PB_OFFSET + MNM_TIMEZONE_TIME_OF_INTEREST
     #[prost(string, optional, tag = "154682")]
-    pub timezone_time_of_interest: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub timezone_time_of_interest: ::core::option::Option<::prost::alloc::string::String>,
     /// PB_OFFSET + MNM_BEGIN_TIME_OF_INTEREST_MSM
     #[prost(int32, optional, tag = "154680")]
     pub begin_time_of_interest_msm: ::core::option::Option<i32>,
@@ -1580,17 +1454,7 @@ pub struct ResponseDepthByOrderSnapshot {
 }
 /// Nested message and enum types in `ResponseDepthByOrderSnapshot`.
 pub mod response_depth_by_order_snapshot {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum TransactionType {
         Buy = 1,
@@ -1645,17 +1509,7 @@ pub struct RequestDepthByOrderUpdates {
 }
 /// Nested message and enum types in `RequestDepthByOrderUpdates`.
 pub mod request_depth_by_order_updates {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Request {
         Subscribe = 1,
@@ -1807,17 +1661,7 @@ pub struct BestBidOffer {
 /// Nested message and enum types in `BestBidOffer`.
 pub mod best_bid_offer {
     /// below enum is just for reference only, not used in this message
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PresenceBits {
         Bid = 1,
@@ -1899,17 +1743,7 @@ pub struct OrderBook {
 /// Nested message and enum types in `OrderBook`.
 pub mod order_book {
     /// below enum is just for reference only, not used in this message
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PresenceBits {
         Bid = 1,
@@ -1935,17 +1769,7 @@ pub mod order_book {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum UpdateType {
         ClearOrderBook = 1,
@@ -2022,9 +1846,7 @@ pub struct LastTrade {
     pub exchange_order_id: ::core::option::Option<::prost::alloc::string::String>,
     /// PB_OFFSET + MNM_AGGRESSOR_EXCH_ORD_ID
     #[prost(string, optional, tag = "154641")]
-    pub aggressor_exchange_order_id: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub aggressor_exchange_order_id: ::core::option::Option<::prost::alloc::string::String>,
     /// PB_OFFSET + MNM_NET_CHANGE
     #[prost(double, optional, tag = "100011")]
     pub net_change: ::core::option::Option<f64>,
@@ -2064,17 +1886,7 @@ pub struct LastTrade {
 /// Nested message and enum types in `LastTrade`.
 pub mod last_trade {
     /// below enum is just for reference only, not used in this message
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PresenceBits {
         LastTrade = 1,
@@ -2109,17 +1921,7 @@ pub mod last_trade {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum TransactionType {
         Buy = 1,
@@ -2201,17 +2003,7 @@ pub struct TradeStatistics {
 /// Nested message and enum types in `TradeStatistics`.
 pub mod trade_statistics {
     /// below enum is just for reference only, not used in this message
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PresenceBits {
         Open = 1,
@@ -2278,17 +2070,7 @@ pub struct QuoteStatistics {
 /// Nested message and enum types in `QuoteStatistics`.
 pub mod quote_statistics {
     /// below enum is just for reference only, not used in this message
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PresenceBits {
         HighestBid = 1,
@@ -2352,17 +2134,7 @@ pub struct IndicatorPrices {
 /// Nested message and enum types in `IndicatorPrices`.
 pub mod indicator_prices {
     /// below enum is just for reference only, not used in this message
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PresenceBits {
         OpeningIndicator = 1,
@@ -2453,17 +2225,7 @@ pub struct EndOfDayPrices {
 /// Nested message and enum types in `EndOfDayPrices`.
 pub mod end_of_day_prices {
     /// below enum is just for reference only, not used in this message
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PresenceBits {
         Close = 1,
@@ -2613,17 +2375,7 @@ pub struct DepthByOrder {
 }
 /// Nested message and enum types in `DepthByOrder`.
 pub mod depth_by_order {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum TransactionType {
         Buy = 1,
@@ -2649,17 +2401,7 @@ pub mod depth_by_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum UpdateType {
         New = 1,
@@ -2767,17 +2509,7 @@ pub struct OrderPriceLimits {
 /// Nested message and enum types in `OrderPriceLimits`.
 pub mod order_price_limits {
     /// below enum is just for reference only, not used in this message
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PresenceBits {
         HighPriceLimit = 1,
@@ -2839,22 +2571,16 @@ pub struct ResponseLoginInfo {
     #[prost(string, optional, tag = "154217")]
     pub last_name: ::core::option::Option<::prost::alloc::string::String>,
     /// PB_OFFSET + MNM_USER_TYPE
-    #[prost(enumeration = "response_login_info::UserType", optional, tag = "154036")]
+    #[prost(
+        enumeration = "response_login_info::UserType",
+        optional,
+        tag = "154036"
+    )]
     pub user_type: ::core::option::Option<i32>,
 }
 /// Nested message and enum types in `ResponseLoginInfo`.
 pub mod response_login_info {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum UserType {
         Admin = 0,
@@ -2903,22 +2629,16 @@ pub struct RequestAccountList {
     #[prost(string, optional, tag = "154014")]
     pub ib_id: ::core::option::Option<::prost::alloc::string::String>,
     /// PB_OFFSET + MNM_USER_TYPE
-    #[prost(enumeration = "request_account_list::UserType", optional, tag = "154036")]
+    #[prost(
+        enumeration = "request_account_list::UserType",
+        optional,
+        tag = "154036"
+    )]
     pub user_type: ::core::option::Option<i32>,
 }
 /// Nested message and enum types in `RequestAccountList`.
 pub mod request_account_list {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum UserType {
         Fcm = 1,
@@ -2971,9 +2691,7 @@ pub struct ResponseAccountList {
     #[prost(string, optional, tag = "131035")]
     pub account_auto_liquidate: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "131040")]
-    pub auto_liq_threshold_current_value: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub auto_liq_threshold_current_value: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// PB_OFFSET = 100000, is the offset added for each MNM field id
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -3000,17 +2718,7 @@ pub struct RequestAccountRmsInfo {
 }
 /// Nested message and enum types in `RequestAccountRmsInfo`.
 pub mod request_account_rms_info {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum UserType {
         Fcm = 1,
@@ -3127,17 +2835,7 @@ pub struct ResponseAccountRmsInfo {
 /// Nested message and enum types in `ResponseAccountRmsInfo`.
 pub mod response_account_rms_info {
     /// below enum is just for reference only, not used in this message
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PresenceBits {
         BuyLimit = 1,
@@ -3187,17 +2885,7 @@ pub mod response_account_rms_info {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum AutoLiquidateFlag {
         Enabled = 1,
@@ -3244,17 +2932,7 @@ pub struct RequestAccountRmsUpdates {
 }
 /// Nested message and enum types in `RequestAccountRmsUpdates`.
 pub mod request_account_rms_updates {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum UpdateBits {
         AutoLiqThresholdCurrentValue = 1,
@@ -3272,9 +2950,7 @@ pub mod request_account_rms_updates {
         /// Creates an enum from field names used in the ProtoBuf definition.
         pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
             match value {
-                "AUTO_LIQ_THRESHOLD_CURRENT_VALUE" => {
-                    Some(Self::AutoLiqThresholdCurrentValue)
-                }
+                "AUTO_LIQ_THRESHOLD_CURRENT_VALUE" => Some(Self::AutoLiqThresholdCurrentValue),
                 _ => None,
             }
         }
@@ -3363,17 +3039,7 @@ pub struct ResponseProductRmsInfo {
 /// Nested message and enum types in `ResponseProductRmsInfo`.
 pub mod response_product_rms_info {
     /// below enum is just for reference only, not used in this message
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PresenceBits {
         BuyLimit = 1,
@@ -3532,7 +3198,11 @@ pub struct RequestNewOrder {
     pub price_type: ::core::option::Option<i32>,
     #[prost(string, optional, tag = "112016")]
     pub trade_route: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "request_new_order::OrderPlacement", optional, tag = "154710")]
+    #[prost(
+        enumeration = "request_new_order::OrderPlacement",
+        optional,
+        tag = "154710"
+    )]
     pub manual_or_auto: ::core::option::Option<i32>,
     #[prost(bool, optional, tag = "157063")]
     pub trailing_stop: ::core::option::Option<bool>,
@@ -3556,24 +3226,18 @@ pub struct RequestNewOrder {
     pub if_touched_exchange: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(enumeration = "request_new_order::Condition", optional, tag = "154453")]
     pub if_touched_condition: ::core::option::Option<i32>,
-    #[prost(enumeration = "request_new_order::PriceField", optional, tag = "154454")]
+    #[prost(
+        enumeration = "request_new_order::PriceField",
+        optional,
+        tag = "154454"
+    )]
     pub if_touched_price_field: ::core::option::Option<i32>,
     #[prost(double, optional, tag = "153632")]
     pub if_touched_price: ::core::option::Option<f64>,
 }
 /// Nested message and enum types in `RequestNewOrder`.
 pub mod request_new_order {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum TransactionType {
         Buy = 1,
@@ -3599,17 +3263,7 @@ pub mod request_new_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum OrderPlacement {
         Manual = 1,
@@ -3635,17 +3289,7 @@ pub mod request_new_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Duration {
         Day = 1,
@@ -3677,17 +3321,7 @@ pub mod request_new_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PriceType {
         Limit = 1,
@@ -3725,17 +3359,7 @@ pub mod request_new_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PriceField {
         BidPrice = 1,
@@ -3767,17 +3391,7 @@ pub mod request_new_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Condition {
         EqualTo = 1,
@@ -3870,7 +3484,11 @@ pub struct RequestModifyOrder {
     pub price: ::core::option::Option<f64>,
     #[prost(double, optional, tag = "149247")]
     pub trigger_price: ::core::option::Option<f64>,
-    #[prost(enumeration = "request_modify_order::PriceType", optional, tag = "112008")]
+    #[prost(
+        enumeration = "request_modify_order::PriceType",
+        optional,
+        tag = "112008"
+    )]
     pub price_type: ::core::option::Option<i32>,
     #[prost(
         enumeration = "request_modify_order::OrderPlacement",
@@ -3886,26 +3504,24 @@ pub struct RequestModifyOrder {
     pub if_touched_symbol: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "154452")]
     pub if_touched_exchange: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "request_modify_order::Condition", optional, tag = "154453")]
+    #[prost(
+        enumeration = "request_modify_order::Condition",
+        optional,
+        tag = "154453"
+    )]
     pub if_touched_condition: ::core::option::Option<i32>,
-    #[prost(enumeration = "request_modify_order::PriceField", optional, tag = "154454")]
+    #[prost(
+        enumeration = "request_modify_order::PriceField",
+        optional,
+        tag = "154454"
+    )]
     pub if_touched_price_field: ::core::option::Option<i32>,
     #[prost(double, optional, tag = "153632")]
     pub if_touched_price: ::core::option::Option<f64>,
 }
 /// Nested message and enum types in `RequestModifyOrder`.
 pub mod request_modify_order {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PriceType {
         Limit = 1,
@@ -3943,17 +3559,7 @@ pub mod request_modify_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PriceField {
         BidPrice = 1,
@@ -3985,17 +3591,7 @@ pub mod request_modify_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Condition {
         EqualTo = 1,
@@ -4033,17 +3629,7 @@ pub mod request_modify_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum OrderPlacement {
         Manual = 1,
@@ -4158,17 +3744,7 @@ pub struct RequestCancelOrder {
 }
 /// Nested message and enum types in `RequestCancelOrder`.
 pub mod request_cancel_order {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum OrderPlacement {
         Manual = 1,
@@ -4255,17 +3831,7 @@ pub struct RequestCancelAllOrders {
 }
 /// Nested message and enum types in `RequestCancelAllOrders`.
 pub mod request_cancel_all_orders {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum OrderPlacement {
         Manual = 1,
@@ -4291,17 +3857,7 @@ pub mod request_cancel_all_orders {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum UserType {
         Admin = 0,
@@ -4587,17 +4143,7 @@ pub struct RequestOcoOrder {
 }
 /// Nested message and enum types in `RequestOCOOrder`.
 pub mod request_oco_order {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum TransactionType {
         Buy = 1,
@@ -4623,17 +4169,7 @@ pub mod request_oco_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Duration {
         Day = 1,
@@ -4665,17 +4201,7 @@ pub mod request_oco_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PriceType {
         Limit = 1,
@@ -4707,17 +4233,7 @@ pub mod request_oco_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum OrderPlacement {
         Manual = 1,
@@ -4804,9 +4320,17 @@ pub struct RequestBracketOrder {
         tag = "112003"
     )]
     pub transaction_type: ::core::option::Option<i32>,
-    #[prost(enumeration = "request_bracket_order::Duration", optional, tag = "112005")]
+    #[prost(
+        enumeration = "request_bracket_order::Duration",
+        optional,
+        tag = "112005"
+    )]
     pub duration: ::core::option::Option<i32>,
-    #[prost(enumeration = "request_bracket_order::PriceType", optional, tag = "112008")]
+    #[prost(
+        enumeration = "request_bracket_order::PriceType",
+        optional,
+        tag = "112008"
+    )]
     pub price_type: ::core::option::Option<i32>,
     #[prost(string, optional, tag = "112016")]
     pub trade_route: ::core::option::Option<::prost::alloc::string::String>,
@@ -4816,7 +4340,11 @@ pub struct RequestBracketOrder {
         tag = "154710"
     )]
     pub manual_or_auto: ::core::option::Option<i32>,
-    #[prost(enumeration = "request_bracket_order::UserType", optional, tag = "154036")]
+    #[prost(
+        enumeration = "request_bracket_order::UserType",
+        optional,
+        tag = "154036"
+    )]
     pub user_type: ::core::option::Option<i32>,
     #[prost(
         enumeration = "request_bracket_order::BracketType",
@@ -4868,26 +4396,24 @@ pub struct RequestBracketOrder {
     pub if_touched_symbol: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "154452")]
     pub if_touched_exchange: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "request_bracket_order::Condition", optional, tag = "154453")]
+    #[prost(
+        enumeration = "request_bracket_order::Condition",
+        optional,
+        tag = "154453"
+    )]
     pub if_touched_condition: ::core::option::Option<i32>,
-    #[prost(enumeration = "request_bracket_order::PriceField", optional, tag = "154454")]
+    #[prost(
+        enumeration = "request_bracket_order::PriceField",
+        optional,
+        tag = "154454"
+    )]
     pub if_touched_price_field: ::core::option::Option<i32>,
     #[prost(double, optional, tag = "153632")]
     pub if_touched_price: ::core::option::Option<f64>,
 }
 /// Nested message and enum types in `RequestBracketOrder`.
 pub mod request_bracket_order {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum UserType {
         Admin = 0,
@@ -4919,17 +4445,7 @@ pub mod request_bracket_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum BracketType {
         StopOnly = 1,
@@ -4967,17 +4483,7 @@ pub mod request_bracket_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum TransactionType {
         Buy = 1,
@@ -5003,17 +4509,7 @@ pub mod request_bracket_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Duration {
         Day = 1,
@@ -5045,17 +4541,7 @@ pub mod request_bracket_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PriceType {
         Limit = 1,
@@ -5093,17 +4579,7 @@ pub mod request_bracket_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum OrderPlacement {
         Manual = 1,
@@ -5129,17 +4605,7 @@ pub mod request_bracket_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PriceField {
         BidPrice = 1,
@@ -5171,17 +4637,7 @@ pub mod request_bracket_order {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Condition {
         EqualTo = 1,
@@ -5343,14 +4799,10 @@ pub struct ResponseShowBracketStops {
     pub stop_ticks: ::core::option::Option<::prost::alloc::string::String>,
     /// PB_OFFSET + MNM_BRACKET_TRAILING_FIELD_ID
     #[prost(string, optional, tag = "157062")]
-    pub bracket_trailing_field_id: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub bracket_trailing_field_id: ::core::option::Option<::prost::alloc::string::String>,
     /// PB_OFFSET + MNM_TRAILING_STOP_TRIGGER_TICKS
     #[prost(string, optional, tag = "157124")]
-    pub trailing_stop_trigger_ticks: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub trailing_stop_trigger_ticks: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// PB_OFFSET = 100000, is the offset added for each MNM field id
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -5507,17 +4959,7 @@ pub struct ResponseListExchangePermissions {
 }
 /// Nested message and enum types in `ResponseListExchangePermissions`.
 pub mod response_list_exchange_permissions {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum EntitlementFlag {
         Enabled = 1,
@@ -5598,17 +5040,7 @@ pub struct RequestEasyToBorrowList {
 }
 /// Nested message and enum types in `RequestEasyToBorrowList`.
 pub mod request_easy_to_borrow_list {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Request {
         Subscribe = 1,
@@ -5721,17 +5153,7 @@ pub struct RequestExitPosition {
 }
 /// Nested message and enum types in `RequestExitPosition`.
 pub mod request_exit_position {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum OrderPlacement {
         Manual = 1,
@@ -5992,17 +5414,7 @@ pub struct RithmicOrderNotification {
 }
 /// Nested message and enum types in `RithmicOrderNotification`.
 pub mod rithmic_order_notification {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum NotifyType {
         OrderRcvdFromClnt = 1,
@@ -6082,17 +5494,7 @@ pub mod rithmic_order_notification {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum TransactionType {
         Buy = 1,
@@ -6121,17 +5523,7 @@ pub mod rithmic_order_notification {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Duration {
         Day = 1,
@@ -6163,17 +5555,7 @@ pub mod rithmic_order_notification {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PriceType {
         Limit = 1,
@@ -6205,17 +5587,7 @@ pub mod rithmic_order_notification {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum BracketType {
         StopOnly = 1,
@@ -6253,17 +5625,7 @@ pub mod rithmic_order_notification {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum OrderPlacement {
         Manual = 1,
@@ -6463,17 +5825,7 @@ pub struct ExchangeOrderNotification {
 }
 /// Nested message and enum types in `ExchangeOrderNotification`.
 pub mod exchange_order_notification {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum NotifyType {
         Status = 1,
@@ -6520,17 +5872,7 @@ pub mod exchange_order_notification {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum TransactionType {
         Buy = 1,
@@ -6559,17 +5901,7 @@ pub mod exchange_order_notification {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Duration {
         Day = 1,
@@ -6601,17 +5933,7 @@ pub mod exchange_order_notification {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum PriceType {
         Limit = 1,
@@ -6643,17 +5965,7 @@ pub mod exchange_order_notification {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum BracketType {
         StopOnly = 1,
@@ -6691,17 +6003,7 @@ pub mod exchange_order_notification {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum OrderPlacement {
         Manual = 1,
@@ -6745,9 +6047,7 @@ pub struct AccountListUpdates {
     pub account_id: ::core::option::Option<::prost::alloc::string::String>,
     /// PB_OFFSET + MNM_AUTO_LIQ_THRESHOLD_CURRENT_VALUE
     #[prost(string, optional, tag = "131040")]
-    pub auto_liq_threshold_current_value: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub auto_liq_threshold_current_value: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// PB_OFFSET = 100000, is the offset added for each MNM field id
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -6787,31 +6087,15 @@ pub struct AccountRmsUpdates {
     #[prost(string, optional, tag = "154008")]
     pub account_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "131040")]
-    pub auto_liq_threshold_current_value: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub auto_liq_threshold_current_value: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "131049")]
-    pub auto_liq_peak_account_balance: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub auto_liq_peak_account_balance: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "131050")]
-    pub auto_liq_peak_account_balance_ssboe: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub auto_liq_peak_account_balance_ssboe: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Nested message and enum types in `AccountRmsUpdates`.
 pub mod account_rms_updates {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum UpdateBits {
         AutoLiqThresholdCurrentValue = 1,
@@ -6829,9 +6113,7 @@ pub mod account_rms_updates {
         /// Creates an enum from field names used in the ProtoBuf definition.
         pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
             match value {
-                "AUTO_LIQ_THRESHOLD_CURRENT_VALUE" => {
-                    Some(Self::AutoLiqThresholdCurrentValue)
-                }
+                "AUTO_LIQ_THRESHOLD_CURRENT_VALUE" => Some(Self::AutoLiqThresholdCurrentValue),
                 _ => None,
             }
         }
@@ -6865,17 +6147,7 @@ pub struct RequestPnLPositionUpdates {
 }
 /// Nested message and enum types in `RequestPnLPositionUpdates`.
 pub mod request_pn_l_position_updates {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Request {
         Subscribe = 1,
@@ -7006,9 +6278,7 @@ pub struct AccountPnLPositionUpdate {
     #[prost(string, optional, tag = "157118")]
     pub option_closed_pnl: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "156965")]
-    pub percent_maximum_allowable_loss: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub percent_maximum_allowable_loss: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "157117")]
     pub option_open_pnl: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "154262")]
@@ -7115,7 +6385,11 @@ pub struct RequestTickBarReplay {
     pub symbol: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "110101")]
     pub exchange: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "request_tick_bar_replay::BarType", optional, tag = "119200")]
+    #[prost(
+        enumeration = "request_tick_bar_replay::BarType",
+        optional,
+        tag = "119200"
+    )]
     pub bar_type: ::core::option::Option<i32>,
     #[prost(
         enumeration = "request_tick_bar_replay::BarSubType",
@@ -7152,17 +6426,7 @@ pub struct RequestTickBarReplay {
 }
 /// Nested message and enum types in `RequestTickBarReplay`.
 pub mod request_tick_bar_replay {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum BarType {
         TickBar = 1,
@@ -7191,17 +6455,7 @@ pub mod request_tick_bar_replay {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum BarSubType {
         Regular = 1,
@@ -7227,17 +6481,7 @@ pub mod request_tick_bar_replay {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Direction {
         First = 1,
@@ -7263,17 +6507,7 @@ pub mod request_tick_bar_replay {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum TimeOrder {
         Forwards = 1,
@@ -7316,7 +6550,11 @@ pub struct ResponseTickBarReplay {
     pub symbol: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "110101")]
     pub exchange: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "response_tick_bar_replay::BarType", optional, tag = "119200")]
+    #[prost(
+        enumeration = "response_tick_bar_replay::BarType",
+        optional,
+        tag = "119200"
+    )]
     pub r#type: ::core::option::Option<i32>,
     #[prost(
         enumeration = "response_tick_bar_replay::BarSubType",
@@ -7351,17 +6589,7 @@ pub struct ResponseTickBarReplay {
 }
 /// Nested message and enum types in `ResponseTickBarReplay`.
 pub mod response_tick_bar_replay {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum BarType {
         TickBar = 1,
@@ -7390,17 +6618,7 @@ pub mod response_tick_bar_replay {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum BarSubType {
         Regular = 1,
@@ -7443,10 +6661,18 @@ pub struct RequestTickBarUpdate {
     #[prost(string, optional, tag = "110101")]
     pub exchange: ::core::option::Option<::prost::alloc::string::String>,
     /// PB_OFFSET + MNM_REQUEST
-    #[prost(enumeration = "request_tick_bar_update::Request", optional, tag = "100000")]
+    #[prost(
+        enumeration = "request_tick_bar_update::Request",
+        optional,
+        tag = "100000"
+    )]
     pub request: ::core::option::Option<i32>,
     /// PB_OFFSET + MNM_DATA_BAR_TYPE
-    #[prost(enumeration = "request_tick_bar_update::BarType", optional, tag = "119200")]
+    #[prost(
+        enumeration = "request_tick_bar_update::BarType",
+        optional,
+        tag = "119200"
+    )]
     pub bar_type: ::core::option::Option<i32>,
     /// PB_OFFSET + MNM_DATA_BAR_SUB_TYPE
     #[prost(
@@ -7467,17 +6693,7 @@ pub struct RequestTickBarUpdate {
 }
 /// Nested message and enum types in `RequestTickBarUpdate`.
 pub mod request_tick_bar_update {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum BarType {
         TickBar = 1,
@@ -7506,17 +6722,7 @@ pub mod request_tick_bar_update {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum BarSubType {
         Regular = 1,
@@ -7542,17 +6748,7 @@ pub mod request_tick_bar_update {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Request {
         Subscribe = 1,
@@ -7602,7 +6798,11 @@ pub struct RequestTimeBarReplay {
     pub symbol: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "110101")]
     pub exchange: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "request_time_bar_replay::BarType", optional, tag = "119200")]
+    #[prost(
+        enumeration = "request_time_bar_replay::BarType",
+        optional,
+        tag = "119200"
+    )]
     pub bar_type: ::core::option::Option<i32>,
     #[prost(int32, optional, tag = "119112")]
     pub bar_type_period: ::core::option::Option<i32>,
@@ -7629,17 +6829,7 @@ pub struct RequestTimeBarReplay {
 }
 /// Nested message and enum types in `RequestTimeBarReplay`.
 pub mod request_time_bar_replay {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum BarType {
         SecondBar = 1,
@@ -7671,17 +6861,7 @@ pub mod request_time_bar_replay {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Direction {
         First = 1,
@@ -7707,17 +6887,7 @@ pub mod request_time_bar_replay {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum TimeOrder {
         Forwards = 1,
@@ -7760,7 +6930,11 @@ pub struct ResponseTimeBarReplay {
     pub symbol: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "110101")]
     pub exchange: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(enumeration = "response_time_bar_replay::BarType", optional, tag = "119200")]
+    #[prost(
+        enumeration = "response_time_bar_replay::BarType",
+        optional,
+        tag = "119200"
+    )]
     pub r#type: ::core::option::Option<i32>,
     #[prost(string, optional, tag = "119112")]
     pub period: ::core::option::Option<::prost::alloc::string::String>,
@@ -7791,17 +6965,7 @@ pub struct ResponseTimeBarReplay {
 }
 /// Nested message and enum types in `ResponseTimeBarReplay`.
 pub mod response_time_bar_replay {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum BarType {
         SecondBar = 1,
@@ -7850,10 +7014,18 @@ pub struct RequestTimeBarUpdate {
     #[prost(string, optional, tag = "110101")]
     pub exchange: ::core::option::Option<::prost::alloc::string::String>,
     /// PB_OFFSET + MNM_REQUEST
-    #[prost(enumeration = "request_time_bar_update::Request", optional, tag = "100000")]
+    #[prost(
+        enumeration = "request_time_bar_update::Request",
+        optional,
+        tag = "100000"
+    )]
     pub request: ::core::option::Option<i32>,
     /// PB_OFFSET + MNM_DATA_BAR_TYPE
-    #[prost(enumeration = "request_time_bar_update::BarType", optional, tag = "119200")]
+    #[prost(
+        enumeration = "request_time_bar_update::BarType",
+        optional,
+        tag = "119200"
+    )]
     pub bar_type: ::core::option::Option<i32>,
     /// PB_OFFSET + MNM_TIME_BAR_PERIOD
     #[prost(int32, optional, tag = "119112")]
@@ -7861,17 +7033,7 @@ pub struct RequestTimeBarUpdate {
 }
 /// Nested message and enum types in `RequestTimeBarUpdate`.
 pub mod request_time_bar_update {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum BarType {
         SecondBar = 1,
@@ -7903,17 +7065,7 @@ pub mod request_time_bar_update {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Request {
         Subscribe = 1,
@@ -8100,17 +7252,7 @@ pub struct TickBar {
 }
 /// Nested message and enum types in `TickBar`.
 pub mod tick_bar {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum BarType {
         TickBar = 1,
@@ -8139,17 +7281,7 @@ pub mod tick_bar {
             }
         }
     }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum BarSubType {
         Regular = 1,
@@ -8233,17 +7365,7 @@ pub struct TimeBar {
 }
 /// Nested message and enum types in `TimeBar`.
 pub mod time_bar {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum BarType {
         SecondBar = 1,
@@ -8302,9 +7424,7 @@ pub struct ResponseListUnacceptedAgreements {
     #[prost(string, optional, tag = "153407")]
     pub agreement_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "153430")]
-    pub agreement_acceptance_request: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub agreement_acceptance_request: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RequestListAcceptedAgreements {
@@ -8330,13 +7450,9 @@ pub struct ResponseListAcceptedAgreements {
     #[prost(int32, optional, tag = "153427")]
     pub agreement_acceptance_ssboe: ::core::option::Option<i32>,
     #[prost(string, optional, tag = "153426")]
-    pub agreement_acceptance_status: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub agreement_acceptance_status: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "153430")]
-    pub agreement_acceptance_request: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub agreement_acceptance_request: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "153406")]
     pub agreement_title: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "153407")]
@@ -8352,9 +7468,7 @@ pub struct RequestAcceptAgreement {
     pub agreement_id: ::core::option::Option<::prost::alloc::string::String>,
     /// Professional or Non-Professional
     #[prost(string, optional, tag = "153431")]
-    pub market_data_usage_capacity: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub market_data_usage_capacity: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResponseAcceptAgreement {
@@ -8374,9 +7488,7 @@ pub struct RequestSetRithmicMrktDataSelfCertStatus {
     #[prost(string, optional, tag = "153407")]
     pub agreement_id: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "153431")]
-    pub market_data_usage_capacity: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub market_data_usage_capacity: ::core::option::Option<::prost::alloc::string::String>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResponseSetRithmicMrktDataSelfCertStatus {
@@ -8419,7 +7531,5 @@ pub struct ResponseShowAgreement {
     #[prost(string, optional, tag = "153415")]
     pub agreement_status: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "153430")]
-    pub agreement_acceptance_request: ::core::option::Option<
-        ::prost::alloc::string::String,
-    >,
+    pub agreement_acceptance_request: ::core::option::Option<::prost::alloc::string::String>,
 }
