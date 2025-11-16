@@ -217,7 +217,9 @@ impl PlantActor for PnlPlant {
         loop {
             tokio::select! {
                 _ = self.interval.tick() => {
-                    self.handle_command(PnlPlantCommand::SendHeartbeat {}).await;
+                    if self.logged_in {
+                        self.handle_command(PnlPlantCommand::SendHeartbeat {}).await;
+                    }
                 }
                 Some(message) = self.request_receiver.recv() => {
                     self.handle_command(message).await;

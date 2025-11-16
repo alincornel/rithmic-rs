@@ -193,7 +193,23 @@ impl RithmicSenderApi {
         self.request_to_buf(req, id)
     }
 
-    #[allow(dead_code)]
+    /// Request a new single order (without bracket orders)
+    ///
+    /// This places a standalone order without automatic profit targets or stop losses.
+    /// For orders with brackets (stop loss and profit target), use `request_bracket_order` instead.
+    ///
+    /// # Arguments
+    /// * `exchange` - The exchange code (e.g., "CME")
+    /// * `symbol` - The trading symbol (e.g., "ESM1")
+    /// * `qty` - Order quantity
+    /// * `price` - Order price (ignored for market orders)
+    /// * `action` - Buy or Sell
+    /// * `ordertype` - Order type (Limit, Market, Stop, etc.)
+    /// * `localid` - User-defined identifier for this order
+    /// * `duration` - Time in force (Day, GTC, etc.)
+    ///
+    /// # Returns
+    /// A tuple of (serialized request buffer, request ID)
     pub fn request_new_order(
         &mut self,
         exchange: &str,
@@ -203,8 +219,6 @@ impl RithmicSenderApi {
         action: request_new_order::TransactionType,
         ordertype: request_new_order::PriceType,
         localid: &str,
-
-        // optional args
         duration: Option<request_new_order::Duration>,
     ) -> (Vec<u8>, String) {
         let id = self.get_next_message_id();
@@ -336,7 +350,17 @@ impl RithmicSenderApi {
         self.request_to_buf(req, id)
     }
 
-    #[allow(dead_code)]
+    /// Request to exit an entire position for a given symbol
+    ///
+    /// This will close all open positions for the specified symbol/exchange combination
+    /// by placing a market order in the opposite direction.
+    ///
+    /// # Arguments
+    /// * `symbol` - The trading symbol (e.g., "ESM1")
+    /// * `exchange` - The exchange code (e.g., "CME")
+    ///
+    /// # Returns
+    /// A tuple of (serialized request buffer, request ID)
     pub fn request_exit_position(&mut self, symbol: &str, exchange: &str) -> (Vec<u8>, String) {
         let id = self.get_next_message_id();
 
@@ -397,7 +421,13 @@ impl RithmicSenderApi {
         self.request_to_buf(req, id)
     }
 
-    #[allow(dead_code)]
+    /// Request a list of all active bracket orders
+    ///
+    /// Returns information about all currently active bracket orders for the account,
+    /// including entry orders with their associated profit targets and stop losses.
+    ///
+    /// # Returns
+    /// A tuple of (serialized request buffer, request ID)
     pub fn request_show_brackets(&mut self) -> (Vec<u8>, String) {
         let id = self.get_next_message_id();
 
@@ -412,7 +442,13 @@ impl RithmicSenderApi {
         self.request_to_buf(req, id)
     }
 
-    #[allow(dead_code)]
+    /// Request a list of all active bracket stop orders
+    ///
+    /// Returns information specifically about the stop loss orders associated with
+    /// bracket orders. This is useful for monitoring risk management on active positions.
+    ///
+    /// # Returns
+    /// A tuple of (serialized request buffer, request ID)
     pub fn request_show_bracket_stops(&mut self) -> (Vec<u8>, String) {
         let id = self.get_next_message_id();
 
