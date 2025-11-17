@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Replace `event!` macro with specific logging macros (`info!`, `error!`, `warn!`) across all plant files for better code clarity and idiomatic Rust logging
+- Replace `event!` macro with specific logging macros (`info!`, `error!`, `warn!`) across library code for better code clarity and idiomatic Rust logging
+  - Updated: all plant files, `src/api/receiver_api.rs`, `src/request_handler.rs`
 
 ## [0.5.0] - 2025-11-16
 
