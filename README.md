@@ -165,7 +165,7 @@ By default, heartbeat responses are sent automatically but not delivered through
 // Enable heartbeat responses to be delivered through subscription channel
 handle.return_heartbeat_response(true).await;
 
-// Now you can monitor heartbeat errors
+// Now you can monitor heartbeat errors and timeouts
 loop {
     match handle.subscription_receiver.recv().await {
         Ok(update) => {
@@ -177,12 +177,24 @@ loop {
                     break;
                 }
             }
+
+            // Check for heartbeat timeouts (automatic detection)
+            if matches!(update.message, RithmicMessage::HeartbeatTimeout) {
+                eprintln!("Heartbeat timeout - no response after 30s: {}",
+                    update.error.unwrap_or_default());
+                // Connection may be degraded - consider reconnecting
+                break;
+            }
             // ... handle other messages
         }
         Err(e) => break,
     }
 }
 ```
+
+#### Automatic Timeout Detection
+
+When heartbeat responses are enabled with `return_heartbeat_response(false)` (disabled by default), the library automatically tracks pending heartbeats and detects timeouts. If a heartbeat response does not arrive within 30 seconds, a `HeartbeatTimeout` message is sent through the subscription channel.
 
 **Note:** This feature is useful when you need explicit connection health monitoring. During off-market hours or periods where the server may not respond to heartbeats, you can disable this with `handle.return_heartbeat_response(false).await` to avoid false alarms.
 
