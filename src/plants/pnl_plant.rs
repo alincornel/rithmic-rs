@@ -72,24 +72,21 @@ pub enum PnlPlantCommand {
 /// # Example
 ///
 /// ```no_run
-/// use rithmic_rs::{connection_info::{AccountInfo, RithmicConnectionSystem}, plants::pnl_plant::RithmicPnlPlant};
+/// use rithmic_rs::{RithmicConfig, RithmicEnv, ConnectStrategy, plants::pnl_plant::RithmicPnlPlant};
+/// use rithmic_rs::rti::messages::RithmicMessage;
+/// use rithmic_rs::ws::RithmicStream;
 /// use tokio::time::{sleep, Duration};
 ///
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
-///     // Step 1: Create connection credentials
-///     let account_info = AccountInfo {
-///         account_id: "your_account".to_string(),
-///         env: RithmicConnectionSystem::Demo,
-///         fcm_id: "your_fcm".to_string(),
-///         ib_id: "your_ib".to_string(),
-///     };
+///     // Step 1: Create connection configuration
+///     let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
 ///
-///     // Step 2: Create the PnL plant instance
-///     let pnl_plant = RithmicPnlPlant::new(&account_info).await;
+///     // Step 2: Connect to the PnL plant
+///     let pnl_plant = RithmicPnlPlant::connect(&config, ConnectStrategy::Simple).await?;
 ///
 ///     // Step 3: Get a handle to interact with the plant
-///     let handle = pnl_plant.get_handle();
+///     let mut handle = pnl_plant.get_handle();
 ///
 ///     // Step 4: Login to the PnL plant
 ///     handle.login().await?;
@@ -106,8 +103,8 @@ pub enum PnlPlantCommand {
 ///         match handle.subscription_receiver.recv().await {
 ///             Ok(update) => {
 ///                 match update.message {
-///                     RithmicMessage::AccountPnLPositionUpdate(u) => {}
-///                     RithmicMessage::InstrumentPnLPositionUpdate => {}
+///                     RithmicMessage::AccountPnLPositionUpdate(_) => {}
+///                     RithmicMessage::InstrumentPnLPositionUpdate(_) => {}
 ///                     _ => {}
 ///                 }
 ///             },
@@ -615,11 +612,19 @@ impl RithmicPnlPlantHandle {
     ///
     /// # Example
     /// ```no_run
+    /// # use rithmic_rs::{RithmicConfig, RithmicEnv, ConnectStrategy, plants::pnl_plant::RithmicPnlPlant, ws::RithmicStream};
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// # let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
+    /// # let pnl_plant = RithmicPnlPlant::connect(&config, ConnectStrategy::Simple).await?;
+    /// # let mut handle = pnl_plant.get_handle();
     /// // During trading hours, expect heartbeat responses
     /// handle.return_heartbeat_response(true).await;
     ///
     /// // Outside trading hours, don't expect responses
     /// handle.return_heartbeat_response(false).await;
+    /// # Ok(())
+    /// # }
     /// ```
     pub async fn return_heartbeat_response(&self, expect_heartbeat_response: bool) {
         let command = PnlPlantCommand::SetHeartbeatResponseMode {
