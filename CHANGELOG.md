@@ -36,8 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 #### Internal Refactoring
-- Renamed internal field `ignore_heartbeat_response` to `expect_response` in all plants
-  - Improves code clarity by using positive boolean logic
+- Renamed internal field `ignore_heartbeat_response` to `expect_heartbeat_response` in all plants
+  - Improves code clarity with explicit naming and positive boolean logic
+  - Added documentation explaining the setting's purpose and when to use it
   - No API changes - public interface remains the same
 
 #### Heartbeat Response Delivery
@@ -59,9 +60,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Now correctly extracts request_id from `user_msg[0]` instead of using empty string
   - Enables proper matching of heartbeat responses to pending requests in timeout detection
 - Fixed ResponseHeartbeat routing in all plants
-  - Added filtering to respect `expect_response` setting
-  - Heartbeat responses now only delivered to subscription channel when `expect_response = true`
-  - Default behavior (expect_response = false) does not deliver heartbeat responses to channel
+  - Added filtering to respect `expect_heartbeat_response` setting
+  - Heartbeat responses now only delivered to subscription channel when `expect_heartbeat_response = true`
+  - Default behavior (expect_heartbeat_response = false) does not deliver heartbeat responses to channel
 
 #### Code Quality
 - Fixed clippy warning `tabs_in_doc_comments` in `src/rti.rs`

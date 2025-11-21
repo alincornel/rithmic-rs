@@ -55,7 +55,7 @@ pub enum PnlPlantCommand {
         seconds: u64,
     },
     SetHeartbeatResponseMode {
-        expect_response: bool,
+        expect_heartbeat_response: bool,
     },
     SubscribePnlUpdates {
         response_sender: oneshot::Sender<Result<Vec<RithmicResponse>, String>>,
@@ -176,7 +176,14 @@ pub struct PnlPlant {
     config: RithmicConfig,
     interval: Interval,
     logged_in: bool,
-    expect_response: bool,
+    /// Whether to expect and deliver heartbeat responses through the subscription channel.
+    ///
+    /// - `false` (default): Heartbeats sent but responses not delivered (reduces channel noise)
+    /// - `true`: Heartbeat responses delivered with automatic timeout detection after 30s
+    ///
+    /// Enable during trading hours to monitor connection health. Disable during off-hours
+    /// to avoid false alarms when server may not respond to heartbeats.
+    expect_heartbeat_response: bool,
     heartbeat_manager: HeartbeatManager,
     request_handler: RithmicRequestHandler,
     request_receiver: mpsc::Receiver<PnlPlantCommand>,
@@ -214,7 +221,7 @@ impl PnlPlant {
             interval,
             logged_in: false,
             heartbeat_manager,
-            expect_response: false,
+            expect_heartbeat_response: false,
             request_handler: RithmicRequestHandler::new(),
             request_receiver,
             rithmic_reader,
@@ -235,7 +242,7 @@ impl PlantActor for PnlPlant {
             tokio::select! {
                 _ = self.interval.tick() => {
                     if self.logged_in {
-                        self.handle_command(PnlPlantCommand::SendHeartbeat { ignore_response: !self.expect_response }).await;
+                        self.handle_command(PnlPlantCommand::SendHeartbeat { ignore_response: !self.expect_heartbeat_response }).await;
                     }
                 }
                 _ = async {
@@ -293,7 +300,7 @@ impl PlantActor for PnlPlant {
                         self.heartbeat_manager.received(&response.request_id);
 
                         // Skip heartbeat responses if we're not expecting them (default behavior)
-                        if !self.expect_response {
+                        if !self.expect_heartbeat_response {
                             // Heartbeat received and acknowledged, but not delivered to subscription channel
                             return Ok(false);
                         }
@@ -497,8 +504,8 @@ impl PlantActor for PnlPlant {
             PnlPlantCommand::UpdateHeartbeat { seconds } => {
                 self.interval = get_heartbeat_interval(Some(seconds));
             }
-            PnlPlantCommand::SetHeartbeatResponseMode { expect_response } => {
-                self.expect_response = expect_response;
+            PnlPlantCommand::SetHeartbeatResponseMode { expect_heartbeat_response } => {
+                self.expect_heartbeat_response = expect_heartbeat_response;
             }
             PnlPlantCommand::SubscribePnlUpdates { response_sender } => {
                 let (subscribe_buf, id) = self.rithmic_sender_api.request_pnl_position_updates(
@@ -605,7 +612,7 @@ impl RithmicPnlPlantHandle {
     /// Set whether heartbeat responses should be returned
     ///
     /// # Arguments
-    /// * `expect_response` - If true, heartbeat responses will be handled. If false, they will be ignored.
+    /// * `expect_heartbeat_response` - If true, heartbeat responses will be handled. If false, they will be ignored.
     ///
     /// # Example
     /// ```no_run
@@ -615,8 +622,8 @@ impl RithmicPnlPlantHandle {
     /// // Outside trading hours, don't expect responses
     /// handle.return_heartbeat_response(false).await;
     /// ```
-    pub async fn return_heartbeat_response(&self, expect_response: bool) {
-        let command = PnlPlantCommand::SetHeartbeatResponseMode { expect_response };
+    pub async fn return_heartbeat_response(&self, expect_heartbeat_response: bool) {
+        let command = PnlPlantCommand::SetHeartbeatResponseMode { expect_heartbeat_response };
 
         let _ = self.sender.send(command).await;
     }
