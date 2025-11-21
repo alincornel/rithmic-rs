@@ -18,6 +18,7 @@
 //! ```no_run
 //! use rithmic_rs::{RithmicConfig, RithmicEnv, ConnectStrategy, RithmicTickerPlant};
 //! use rithmic_rs::rti::messages::RithmicMessage;
+//! use rithmic_rs::ws::RithmicStream;
 //!
 //! #[tokio::main]
 //! async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -26,7 +27,7 @@
 //!
 //!     // Connect with Simple strategy (recommended default)
 //!     let ticker_plant = RithmicTickerPlant::connect(&config, ConnectStrategy::Simple).await?;
-//!     let handle = ticker_plant.get_handle();
+//!     let mut handle = ticker_plant.get_handle();
 //!
 //!     // Login and subscribe to market data
 //!     handle.login().await?;
@@ -79,17 +80,18 @@
 //! ```no_run
 //! use rithmic_rs::{RithmicConfig, RithmicEnv};
 //!
-//! // From environment variables
-//! let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
+//! fn example() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+//!     // From environment variables
+//!     let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
 //!
-//! // Or using builder pattern
-//! let config = RithmicConfig::builder()
-//!     .user("your_user".to_string())
-//!     .password("your_password".to_string())
-//!     .system_name("Rithmic Paper Trading".to_string())
-//!     .env(RithmicEnv::Demo)
-//!     .build()?;
-//! # Ok::<(), Box<dyn std::error::Error + Send + Sync>>(())
+//!     // Or using builder pattern
+//!     let config = RithmicConfig::builder(RithmicEnv::Demo)
+//!         .user("your_user".to_string())
+//!         .password("your_password".to_string())
+//!         .system_name("Rithmic Paper Trading".to_string())
+//!         .build()?;
+//!     Ok(())
+//! }
 //! ```
 //!
 //! ## Module Organization

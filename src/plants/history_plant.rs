@@ -83,24 +83,20 @@ pub enum HistoryPlantCommand {
 /// # Example
 ///
 /// ```no_run
-/// use rithmic_rs::{connection_info::{AccountInfo, RithmicConnectionSystem}, plants::history_plant::RithmicHistoryPlant};
+/// use rithmic_rs::{RithmicConfig, RithmicEnv, ConnectStrategy, plants::history_plant::RithmicHistoryPlant};
+/// use rithmic_rs::ws::RithmicStream;
 /// use tokio::time::{sleep, Duration};
 ///
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
-///     // Step 1: Create connection credentials
-///     let account_info = AccountInfo {
-///         account_id: "your_account".to_string(),
-///         env: RithmicConnectionSystem::Demo,
-///         fcm_id: "your_fcm".to_string(),
-///         ib_id: "your_ib".to_string(),
-///     };
+///     // Step 1: Create connection configuration
+///     let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
 ///
-///     // Step 2: Create the history plant instance
-///     let history_plant = RithmicHistoryPlant::new(&account_info).await;
+///     // Step 2: Connect to the history plant
+///     let history_plant = RithmicHistoryPlant::connect(&config, ConnectStrategy::Simple).await?;
 ///
 ///     // Step 3: Get a handle to interact with the plant
-///     let handle = history_plant.get_handle();
+///     let mut handle = history_plant.get_handle();
 ///
 ///     // Step 4: Login to the history plant
 ///     handle.login().await?;
@@ -655,11 +651,19 @@ impl RithmicHistoryPlantHandle {
     ///
     /// # Example
     /// ```no_run
+    /// # use rithmic_rs::{RithmicConfig, RithmicEnv, ConnectStrategy, plants::history_plant::RithmicHistoryPlant, ws::RithmicStream};
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// # let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
+    /// # let history_plant = RithmicHistoryPlant::connect(&config, ConnectStrategy::Simple).await?;
+    /// # let mut handle = history_plant.get_handle();
     /// // During trading hours, expect heartbeat responses
     /// handle.return_heartbeat_response(true).await;
     ///
     /// // Outside trading hours, don't expect responses
     /// handle.return_heartbeat_response(false).await;
+    /// # Ok(())
+    /// # }
     /// ```
     pub async fn return_heartbeat_response(&self, expect_heartbeat_response: bool) {
         let command = HistoryPlantCommand::SetHeartbeatResponseMode {
