@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.2] - 2025-11-20
+
 ### Added
 
 #### Optional Heartbeat Response Handling
@@ -253,11 +255,13 @@ Previous stable release. See git history for earlier changes.
 
 ## Version History Summary
 
+- **0.5.2** (2025-11-20): Heartbeat improvements - Optional heartbeat response handling, heartbeat timeout detection, internal refactoring
 - **0.5.1** (2025-11-18): Connection error handling improvements - ConnectionError variant, comprehensive WebSocket error detection, automatic error notifications
 - **0.5.0** (2025-11-16): Major stability and API improvements - Connection strategies, unified config, panic fixes, connection health monitoring
 - **0.4.2** (2025-11-15): Previous stable release
 
-[Unreleased]: https://github.com/pbeets/rithmic-rs/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/pbeets/rithmic-rs/compare/v0.5.2...HEAD
+[0.5.2]: https://github.com/pbeets/rithmic-rs/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/pbeets/rithmic-rs/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/pbeets/rithmic-rs/compare/v0.4.2...v0.5.0
 [0.4.2]: https://github.com/pbeets/rithmic-rs/releases/tag/v0.4.2

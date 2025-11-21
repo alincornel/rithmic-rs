@@ -100,19 +100,20 @@ pub enum TickerPlantCommand {
 ///
 /// ```no_run
 /// use rithmic_rs::{
-///     connection_info::AccountInfo,
+///     RithmicConfig, RithmicEnv, ConnectStrategy,
 ///     plants::ticker_plant::RithmicTickerPlant,
 ///     rti::messages::RithmicMessage,
+///     ws::RithmicStream,
 /// };
 ///
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ///     // Load configuration from environment
-///     let config = RithmicConfig::from_dotenv(RithmicEnv::Demo)?;
+///     let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
 ///
 ///     // Connect to the ticker plant
 ///     let ticker_plant = RithmicTickerPlant::connect(&config, ConnectStrategy::Simple).await?;
-///     let handle = ticker_plant.get_handle();
+///     let mut handle = ticker_plant.get_handle();
 ///
 ///     // Login to the ticker plant
 ///     handle.login().await?;
@@ -139,12 +140,10 @@ pub enum TickerPlantCommand {
 ///
 ///                 match update.message {
 ///                     RithmicMessage::LastTrade(trade) => {
-///                         println!("Trade: {} @ {}", trade.size, trade.price);
+///                         println!("Trade: {:?}", trade);
 ///                     }
 ///                     RithmicMessage::BestBidOffer(bbo) => {
-///                         println!("BBO: {} @ {} / {} @ {}",
-///                             bbo.bid_size, bbo.bid_price,
-///                             bbo.ask_price, bbo.ask_size);
+///                         println!("BBO: {:?}", bbo);
 ///                     }
 ///                     RithmicMessage::ResponseHeartbeat(_) => {
 ///                         // Heartbeat OK - connection healthy
@@ -173,18 +172,19 @@ pub enum TickerPlantCommand {
 ///
 /// ```no_run
 /// use rithmic_rs::{
-///     connection_info::AccountInfo,
+///     RithmicConfig, RithmicEnv, ConnectStrategy,
 ///     plants::ticker_plant::RithmicTickerPlant,
 ///     rti::messages::RithmicMessage,
+///     ws::RithmicStream,
 /// };
 /// use tokio::time::{Duration, Instant};
 ///
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
-///     let config = RithmicConfig::from_dotenv(RithmicEnv::Demo)?;
+///     let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
 ///
 ///     let ticker_plant = RithmicTickerPlant::connect(&config, ConnectStrategy::Simple).await?;
-///     let handle = ticker_plant.get_handle();
+///     let mut handle = ticker_plant.get_handle();
 ///     handle.login().await?;
 ///     handle.subscribe("ESM1", "CME").await?;
 ///
@@ -885,11 +885,19 @@ impl RithmicTickerPlantHandle {
     ///
     /// # Example
     /// ```no_run
+    /// # use rithmic_rs::{RithmicConfig, RithmicEnv, ConnectStrategy, plants::ticker_plant::RithmicTickerPlant, ws::RithmicStream};
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// # let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
+    /// # let ticker_plant = RithmicTickerPlant::connect(&config, ConnectStrategy::Simple).await?;
+    /// # let mut handle = ticker_plant.get_handle();
     /// // During trading hours, expect heartbeat responses
     /// handle.return_heartbeat_response(true).await;
     ///
     /// // Outside trading hours, don't expect responses
     /// handle.return_heartbeat_response(false).await;
+    /// # Ok(())
+    /// # }
     /// ```
     pub async fn return_heartbeat_response(&self, expect_heartbeat_response: bool) {
         let command = TickerPlantCommand::SetHeartbeatResponseMode {

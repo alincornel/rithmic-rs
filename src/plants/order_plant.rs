@@ -117,23 +117,19 @@ pub enum OrderPlantCommand {
 ///
 /// ```no_run
 /// use rithmic_rs::{
-///     connection_info::{AccountInfo, RithmicConnectionSystem},
+///     RithmicConfig, RithmicEnv, ConnectStrategy,
 ///     plants::order_plant::RithmicOrderPlant,
-///     api::rithmic_command_types::{RithmicBracketOrder, OrderType, Side},
+///     api::rithmic_command_types::RithmicBracketOrder,
 ///     rti::messages::RithmicMessage,
+///     ws::RithmicStream,
 /// };
 ///
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
-///     let account_info = AccountInfo {
-///         account_id: "your_account".to_string(),
-///         env: RithmicConnectionSystem::Demo,
-///         fcm_id: "your_fcm".to_string(),
-///         ib_id: "your_ib".to_string(),
-///     };
+///     let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
 ///
-///     let order_plant = RithmicOrderPlant::new(&account_info).await;
-///     let handle = order_plant.get_handle();
+///     let order_plant = RithmicOrderPlant::connect(&config, ConnectStrategy::Simple).await?;
+///     let mut handle = order_plant.get_handle();
 ///
 ///     handle.login().await?;
 ///     handle.subscribe_order_updates().await?;
@@ -141,16 +137,16 @@ pub enum OrderPlantCommand {
 ///
 ///     // Place a bracket order
 ///     let bracket_order = RithmicBracketOrder {
-///         account: "your_account".to_string(),
-///         symbol: "ESM1".to_string(),
+///         action: 1, // Buy
+///         duration: 2, // Day
 ///         exchange: "CME".to_string(),
-///         quantity: 1,
-///         side: Side::Buy,
-///         order_type: OrderType::Limit,
-///         price: 4500.00,
+///         localid: "order1".to_string(),
+///         ordertype: 1, // Limit
+///         price: Some(4500.00),
+///         profit_ticks: 8,
+///         qty: 1,
 ///         stop_ticks: 4,
-///         target_ticks: 8,
-///         tif: "Day".to_string(),
+///         symbol: "ESM1".to_string(),
 ///     };
 ///
 ///     handle.place_bracket_order(bracket_order).await?;
@@ -1009,11 +1005,19 @@ impl RithmicOrderPlantHandle {
     ///
     /// # Example
     /// ```no_run
+    /// # use rithmic_rs::{RithmicConfig, RithmicEnv, ConnectStrategy, plants::order_plant::RithmicOrderPlant, ws::RithmicStream};
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// # let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
+    /// # let order_plant = RithmicOrderPlant::connect(&config, ConnectStrategy::Simple).await?;
+    /// # let mut handle = order_plant.get_handle();
     /// // During trading hours, expect heartbeat responses
     /// handle.return_heartbeat_response(true).await;
     ///
     /// // Outside trading hours, don't expect responses
     /// handle.return_heartbeat_response(false).await;
+    /// # Ok(())
+    /// # }
     /// ```
     pub async fn return_heartbeat_response(&self, expect_heartbeat_response: bool) {
         let command = OrderPlantCommand::SetHeartbeatResponseMode {
