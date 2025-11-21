@@ -49,7 +49,7 @@ pub enum PnlPlantCommand {
         response_sender: oneshot::Sender<Result<Vec<RithmicResponse>, String>>,
     },
     SendHeartbeat {
-        ignore_response: bool,
+        expect_response: bool,
     },
     UpdateHeartbeat {
         seconds: u64,
@@ -242,7 +242,7 @@ impl PlantActor for PnlPlant {
             tokio::select! {
                 _ = self.interval.tick() => {
                     if self.logged_in {
-                        self.handle_command(PnlPlantCommand::SendHeartbeat { ignore_response: !self.expect_heartbeat_response }).await;
+                        self.handle_command(PnlPlantCommand::SendHeartbeat { expect_response: self.expect_heartbeat_response }).await;
                     }
                 }
                 _ = async {
@@ -486,10 +486,10 @@ impl PlantActor for PnlPlant {
                     .await
                     .unwrap();
             }
-            PnlPlantCommand::SendHeartbeat { ignore_response } => {
+            PnlPlantCommand::SendHeartbeat { expect_response } => {
                 let (heartbeat_buf, id) = self.rithmic_sender_api.request_heartbeat();
 
-                if !ignore_response {
+                if expect_response {
                     self.heartbeat_manager.sent(id.clone());
                 }
 
