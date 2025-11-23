@@ -129,13 +129,15 @@ pub enum OrderPlantCommand {
 ///
 /// # Connection Health Monitoring
 ///
-/// The subscription receiver provides ALL connection health events, including:
-/// - **Heartbeat responses**: Monitor connection health by checking for errors
+/// The subscription receiver provides connection health events:
+/// - **WebSocket ping/pong timeouts**: Primary indicator of dead connections (auto-detected)
+/// - **Heartbeat errors**: Only forwarded when Rithmic server returns an error (rare)
 /// - **Forced logout events**: Server-initiated disconnections requiring reconnection
 /// - **Order notifications**: Real-time order fills, cancellations, and status changes
 ///
-/// All messages are delivered through the `subscription_receiver` channel. Always check
-/// the `error` field on responses - particularly heartbeats - to detect connection issues.
+/// **Note:** Heartbeat requests are sent automatically for protocol compliance,
+/// but successful responses are silently dropped. Only heartbeat errors from the server
+/// are forwarded as `HeartbeatTimeout` messages.
 ///
 /// # Example: Basic Usage
 ///
@@ -179,31 +181,30 @@ pub enum OrderPlantCommand {
 ///     loop {
 ///         match handle.subscription_receiver.recv().await {
 ///             Ok(update) => {
-///                 // Check for connection health issues
+///                 // Check for errors on all messages
 ///                 if let Some(error) = &update.error {
 ///                     eprintln!("Error from {}: {}", update.source, error);
-///
-///                     if matches!(update.message, RithmicMessage::ResponseHeartbeat(_)) {
-///                         eprintln!("Heartbeat error - connection degraded");
-///                         // Implement reconnection logic
-///                         break;
-///                     }
-///                     continue;
 ///                 }
 ///
+///                 // Handle connection health issues
 ///                 match update.message {
+///                     RithmicMessage::HeartbeatTimeout => {
+///                         eprintln!("Connection timeout - reconnection needed");
+///                         break;
+///                     }
+///                     RithmicMessage::ForcedLogout(_) => {
+///                         eprintln!("Forced logout - reconnection needed");
+///                         break;
+///                     }
+///                     RithmicMessage::ConnectionError => {
+///                         eprintln!("Connection error - reconnection needed");
+///                         break;
+///                     }
 ///                     RithmicMessage::RithmicOrderNotification(order) => {
 ///                         println!("Order notification: {:?}", order);
 ///                     }
 ///                     RithmicMessage::ExchangeOrderNotification(order) => {
 ///                         println!("Exchange notification: {:?}", order);
-///                     }
-///                     RithmicMessage::ResponseHeartbeat(_) => {
-///                         // Connection healthy
-///                     }
-///                     RithmicMessage::ForcedLogout(_) => {
-///                         eprintln!("Forced logout - must reconnect");
-///                         break;
 ///                     }
 ///                     _ => {}
 ///                 }
