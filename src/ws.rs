@@ -18,6 +18,12 @@ pub const HEARTBEAT_SECS: u64 = 60;
 /// Timeout in seconds for heartbeat response when expecting a reply.
 pub const HEARTBEAT_TIMEOUT_SECS: u64 = 30;
 
+/// Number of seconds between WebSocket ping frames sent to detect dead connections.
+pub const PING_INTERVAL_SECS: u64 = 60;
+
+/// Timeout in seconds for WebSocket pong response.
+pub const PING_TIMEOUT_SECS: u64 = 50;
+
 /// Connection attempt timeout in seconds.
 const CONNECT_TIMEOUT_SECS: u64 = 2;
 
@@ -61,6 +67,17 @@ pub fn get_heartbeat_interval(override_secs: Option<u64>) -> Interval {
     let start_offset = Instant::now() + heartbeat_interval;
 
     interval_at(start_offset, heartbeat_interval)
+}
+
+/// Creates an interval for sending WebSocket pings.
+///
+/// Returns an interval starting after the first ping period elapses.
+pub fn get_ping_interval(override_secs: Option<u64>) -> Interval {
+    let secs = override_secs.unwrap_or(PING_INTERVAL_SECS);
+    let ping_interval = Duration::from_secs(secs);
+    let start_offset = Instant::now() + ping_interval;
+
+    interval_at(start_offset, ping_interval)
 }
 
 /// Connect to a single URL without retry.

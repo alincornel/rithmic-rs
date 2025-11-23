@@ -9,11 +9,12 @@ use crate::{
     },
     config::RithmicConfig,
     heartbeat_manager::HeartbeatManager,
+    ping_manager::PingManager,
     request_handler::{RithmicRequest, RithmicRequestHandler},
     rti::{messages::RithmicMessage, request_login::SysInfraType, request_pn_l_position_updates},
     ws::{
-        HEARTBEAT_SECS, HEARTBEAT_TIMEOUT_SECS, PlantActor, RithmicStream, connect_with_strategy,
-        get_heartbeat_interval,
+        HEARTBEAT_SECS, HEARTBEAT_TIMEOUT_SECS, PING_TIMEOUT_SECS, PlantActor, RithmicStream,
+        connect_with_strategy, get_heartbeat_interval, get_ping_interval,
     },
 };
 
@@ -172,6 +173,7 @@ impl RithmicStream for RithmicPnlPlant {
 pub struct PnlPlant {
     config: RithmicConfig,
     interval: Interval,
+    ping_interval: Interval,
     logged_in: bool,
     /// Whether to enable connection health monitoring via heartbeat timeout detection.
     ///
@@ -182,6 +184,7 @@ pub struct PnlPlant {
     /// Use this to verify the connection is still alive during critical trading periods.
     expect_heartbeat_response: bool,
     heartbeat_manager: HeartbeatManager,
+    ping_manager: PingManager,
     request_handler: RithmicRequestHandler,
     request_receiver: mpsc::Receiver<PnlPlantCommand>,
     rithmic_reader: SplitStream<tokio_tungstenite::WebSocketStream<MaybeTlsStream<TcpStream>>>,
@@ -212,12 +215,16 @@ impl PnlPlant {
 
         let interval = get_heartbeat_interval(None);
         let heartbeat_manager = HeartbeatManager::new(HEARTBEAT_TIMEOUT_SECS);
+        let ping_interval = get_ping_interval(None);
+        let ping_manager = PingManager::new(PING_TIMEOUT_SECS);
 
         Ok(PnlPlant {
             config: config.clone(),
             interval,
+            ping_interval,
             logged_in: false,
             heartbeat_manager,
+            ping_manager,
             expect_heartbeat_response: false,
             request_handler: RithmicRequestHandler::new(),
             request_receiver,
@@ -242,6 +249,10 @@ impl PlantActor for PnlPlant {
                         self.handle_command(PnlPlantCommand::SendHeartbeat { expect_response: self.expect_heartbeat_response }).await;
                     }
                 }
+                _ = self.ping_interval.tick() => {
+                    self.ping_manager.sent();
+                    let _ = self.rithmic_sender.send(Message::Ping(vec![].into())).await;
+                }
                 _ = async {
                     if let Some(timeout_at) = self.heartbeat_manager.next_timeout_at() {
                         sleep_until(timeout_at).await
@@ -262,6 +273,29 @@ impl PlantActor for PnlPlant {
                             source: self.rithmic_receiver_api.source.clone(),
                         };
                         let _ = self.subscription_sender.send(error_response);
+                    }
+                }
+                _ = async {
+                    if let Some(timeout_at) = self.ping_manager.next_timeout_at() {
+                        sleep_until(timeout_at).await
+                    } else {
+                        std::future::pending::<()>().await
+                    }
+                } => {
+                    if self.ping_manager.check_timeout() {
+                        error!("WebSocket ping timed out - connection appears dead");
+
+                        let error_response = RithmicResponse {
+                            request_id: "websocket_ping_timeout".to_string(),
+                            message: RithmicMessage::HeartbeatTimeout,
+                            is_update: true,
+                            has_more: false,
+                            multi_response: false,
+                            error: Some("WebSocket ping timeout - connection dead".to_string()),
+                            source: self.rithmic_receiver_api.source.clone(),
+                        };
+                        let _ = self.subscription_sender.send(error_response);
+                        break;
                     }
                 }
                 Some(message) = self.request_receiver.recv() => {
@@ -289,6 +323,9 @@ impl PlantActor for PnlPlant {
             Ok(Message::Close(frame)) => {
                 info!("pnl_plant: Received close frame: {:?}", frame);
                 stop = true;
+            }
+            Ok(Message::Pong(_)) => {
+                self.ping_manager.received();
             }
             Ok(Message::Binary(data)) => match self.rithmic_receiver_api.buf_to_message(data) {
                 Ok(response) => {
