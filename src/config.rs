@@ -120,21 +120,33 @@ impl RithmicConfig {
     /// Create a configuration by loading values from environment variables.
     ///
     /// # Required environment variables
-    /// - `RITHMIC_ACCOUNT_ID`: Your Rithmic account ID
-    /// - `FCM_ID`: Your FCM (Futures Commission Merchant) ID
-    /// - `IB_ID`: Your IB (Introducing Broker) ID
     ///
     /// For Demo environment:
+    /// - `RITHMIC_DEMO_ACCOUNT_ID`: Demo account ID
+    /// - `RITHMIC_DEMO_FCM_ID`: Demo FCM (Futures Commission Merchant) ID
+    /// - `RITHMIC_DEMO_IB_ID`: Demo IB (Introducing Broker) ID
     /// - `RITHMIC_DEMO_USER`: Demo username
     /// - `RITHMIC_DEMO_PW`: Demo password
+    /// - `RITHMIC_DEMO_URL`: Demo WebSocket URL
+    /// - `RITHMIC_DEMO_ALT_URL`: Demo alternative/beta WebSocket URL
     ///
     /// For Live environment:
+    /// - `RITHMIC_LIVE_ACCOUNT_ID`: Live account ID
+    /// - `RITHMIC_LIVE_FCM_ID`: Live FCM (Futures Commission Merchant) ID
+    /// - `RITHMIC_LIVE_IB_ID`: Live IB (Introducing Broker) ID
     /// - `RITHMIC_LIVE_USER`: Live username
     /// - `RITHMIC_LIVE_PW`: Live password
+    /// - `RITHMIC_LIVE_URL`: Live WebSocket URL
+    /// - `RITHMIC_LIVE_ALT_URL`: Live alternative/beta WebSocket URL
     ///
     /// For Test environment:
+    /// - `RITHMIC_TEST_ACCOUNT_ID`: Test account ID
+    /// - `RITHMIC_TEST_FCM_ID`: Test FCM (Futures Commission Merchant) ID
+    /// - `RITHMIC_TEST_IB_ID`: Test IB (Introducing Broker) ID
     /// - `RITHMIC_TEST_USER`: Test username
     /// - `RITHMIC_TEST_PW`: Test password
+    /// - `RITHMIC_TEST_URL`: Test WebSocket URL
+    /// - `RITHMIC_TEST_ALT_URL`: Test alternative/beta WebSocket URL
     ///
     /// # Example
     /// ```no_run
@@ -145,17 +157,19 @@ impl RithmicConfig {
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
     pub fn from_env(env: RithmicEnv) -> Result<Self, ConfigError> {
-        let account_id = env::var("RITHMIC_ACCOUNT_ID")
-            .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_ACCOUNT_ID".to_string()))?;
-        let fcm_id =
-            env::var("FCM_ID").map_err(|_| ConfigError::MissingEnvVar("FCM_ID".to_string()))?;
-        let ib_id =
-            env::var("IB_ID").map_err(|_| ConfigError::MissingEnvVar("IB_ID".to_string()))?;
-
-        let (url, beta_url, user, password, system_name) = match &env {
+        let (account_id, fcm_id, ib_id, url, beta_url, user, password, system_name) = match &env {
             RithmicEnv::Demo => (
-                "wss://rprotocol.rithmic.com:443".to_string(),
-                "wss://rprotocol-beta.rithmic.com:443".to_string(),
+                env::var("RITHMIC_DEMO_ACCOUNT_ID").map_err(|_| {
+                    ConfigError::MissingEnvVar("RITHMIC_DEMO_ACCOUNT_ID".to_string())
+                })?,
+                env::var("RITHMIC_DEMO_FCM_ID")
+                    .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_DEMO_FCM_ID".to_string()))?,
+                env::var("RITHMIC_DEMO_IB_ID")
+                    .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_DEMO_IB_ID".to_string()))?,
+                env::var("RITHMIC_DEMO_URL")
+                    .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_DEMO_URL".to_string()))?,
+                env::var("RITHMIC_DEMO_ALT_URL")
+                    .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_DEMO_ALT_URL".to_string()))?,
                 env::var("RITHMIC_DEMO_USER")
                     .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_DEMO_USER".to_string()))?,
                 env::var("RITHMIC_DEMO_PW")
@@ -163,8 +177,17 @@ impl RithmicConfig {
                 "Rithmic Paper Trading".to_string(),
             ),
             RithmicEnv::Live => (
-                "wss://rprotocol.rithmic.com:443".to_string(),
-                "wss://rprotocol-beta.rithmic.com:443".to_string(),
+                env::var("RITHMIC_LIVE_ACCOUNT_ID").map_err(|_| {
+                    ConfigError::MissingEnvVar("RITHMIC_LIVE_ACCOUNT_ID".to_string())
+                })?,
+                env::var("RITHMIC_LIVE_FCM_ID")
+                    .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_LIVE_FCM_ID".to_string()))?,
+                env::var("RITHMIC_LIVE_IB_ID")
+                    .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_LIVE_IB_ID".to_string()))?,
+                env::var("RITHMIC_LIVE_URL")
+                    .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_LIVE_URL".to_string()))?,
+                env::var("RITHMIC_LIVE_ALT_URL")
+                    .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_LIVE_ALT_URL".to_string()))?,
                 env::var("RITHMIC_LIVE_USER")
                     .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_LIVE_USER".to_string()))?,
                 env::var("RITHMIC_LIVE_PW")
@@ -172,8 +195,17 @@ impl RithmicConfig {
                 "Rithmic 01".to_string(),
             ),
             RithmicEnv::Test => (
-                "wss://rituz00100.rithmic.com:443".to_string(),
-                "wss://rprotocol-beta.rithmic.com:443".to_string(),
+                env::var("RITHMIC_TEST_ACCOUNT_ID").map_err(|_| {
+                    ConfigError::MissingEnvVar("RITHMIC_TEST_ACCOUNT_ID".to_string())
+                })?,
+                env::var("RITHMIC_TEST_FCM_ID")
+                    .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_TEST_FCM_ID".to_string()))?,
+                env::var("RITHMIC_TEST_IB_ID")
+                    .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_TEST_IB_ID".to_string()))?,
+                env::var("RITHMIC_TEST_URL")
+                    .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_TEST_URL".to_string()))?,
+                env::var("RITHMIC_TEST_ALT_URL")
+                    .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_TEST_ALT_URL".to_string()))?,
                 env::var("RITHMIC_TEST_USER")
                     .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_TEST_USER".to_string()))?,
                 env::var("RITHMIC_TEST_PW")
@@ -234,29 +266,15 @@ pub struct RithmicConfigBuilder {
 impl RithmicConfigBuilder {
     /// Create a new builder for the specified environment.
     pub fn new(env: RithmicEnv) -> Self {
-        // Set defaults based on environment
-        let (url, beta_url, system_name) = match &env {
-            RithmicEnv::Demo => (
-                "wss://rprotocol.rithmic.com:443".to_string(),
-                "wss://rprotocol-beta.rithmic.com:443".to_string(),
-                "Rithmic Paper Trading".to_string(),
-            ),
-            RithmicEnv::Live => (
-                "wss://rprotocol.rithmic.com:443".to_string(),
-                "wss://rprotocol-beta.rithmic.com:443".to_string(),
-                "Rithmic 01".to_string(),
-            ),
-            RithmicEnv::Test => (
-                "wss://rituz00100.rithmic.com:443".to_string(),
-                "wss://rprotocol-beta.rithmic.com:443".to_string(),
-                "Rithmic Test".to_string(),
-            ),
+        // Set system name default based on environment
+        let system_name = match &env {
+            RithmicEnv::Demo => "Rithmic Paper Trading".to_string(),
+            RithmicEnv::Live => "Rithmic 01".to_string(),
+            RithmicEnv::Test => "Rithmic Test".to_string(),
         };
 
         Self {
             env: Some(env),
-            url: Some(url),
-            beta_url: Some(beta_url),
             system_name: Some(system_name),
             ..Default::default()
         }
@@ -354,35 +372,57 @@ mod tests {
     // Helper to set up test environment variables
     fn setup_demo_env_vars() {
         unsafe {
-            env::set_var("RITHMIC_ACCOUNT_ID", "test_account");
-            env::set_var("FCM_ID", "test_fcm");
-            env::set_var("IB_ID", "test_ib");
+            env::set_var("RITHMIC_DEMO_ACCOUNT_ID", "test_account");
+            env::set_var("RITHMIC_DEMO_FCM_ID", "test_fcm");
+            env::set_var("RITHMIC_DEMO_IB_ID", "test_ib");
             env::set_var("RITHMIC_DEMO_USER", "demo_user");
             env::set_var("RITHMIC_DEMO_PW", "demo_password");
+            env::set_var("RITHMIC_DEMO_URL", "wss://test-demo.example.com:443");
+            env::set_var(
+                "RITHMIC_DEMO_ALT_URL",
+                "wss://test-demo-alt.example.com:443",
+            );
         }
     }
 
     fn setup_live_env_vars() {
         unsafe {
-            env::set_var("RITHMIC_ACCOUNT_ID", "test_account");
-            env::set_var("FCM_ID", "test_fcm");
-            env::set_var("IB_ID", "test_ib");
+            env::set_var("RITHMIC_LIVE_ACCOUNT_ID", "test_account");
+            env::set_var("RITHMIC_LIVE_FCM_ID", "test_fcm");
+            env::set_var("RITHMIC_LIVE_IB_ID", "test_ib");
             env::set_var("RITHMIC_LIVE_USER", "live_user");
             env::set_var("RITHMIC_LIVE_PW", "live_password");
+            env::set_var("RITHMIC_LIVE_URL", "wss://test-live.example.com:443");
+            env::set_var(
+                "RITHMIC_LIVE_ALT_URL",
+                "wss://test-live-alt.example.com:443",
+            );
         }
     }
 
     fn cleanup_env_vars() {
         unsafe {
-            env::remove_var("RITHMIC_ACCOUNT_ID");
-            env::remove_var("FCM_ID");
-            env::remove_var("IB_ID");
+            env::remove_var("RITHMIC_DEMO_ACCOUNT_ID");
+            env::remove_var("RITHMIC_DEMO_FCM_ID");
+            env::remove_var("RITHMIC_DEMO_IB_ID");
             env::remove_var("RITHMIC_DEMO_USER");
             env::remove_var("RITHMIC_DEMO_PW");
+            env::remove_var("RITHMIC_DEMO_URL");
+            env::remove_var("RITHMIC_DEMO_ALT_URL");
+            env::remove_var("RITHMIC_LIVE_ACCOUNT_ID");
+            env::remove_var("RITHMIC_LIVE_FCM_ID");
+            env::remove_var("RITHMIC_LIVE_IB_ID");
             env::remove_var("RITHMIC_LIVE_USER");
             env::remove_var("RITHMIC_LIVE_PW");
+            env::remove_var("RITHMIC_LIVE_URL");
+            env::remove_var("RITHMIC_LIVE_ALT_URL");
+            env::remove_var("RITHMIC_TEST_ACCOUNT_ID");
+            env::remove_var("RITHMIC_TEST_FCM_ID");
+            env::remove_var("RITHMIC_TEST_IB_ID");
             env::remove_var("RITHMIC_TEST_USER");
             env::remove_var("RITHMIC_TEST_PW");
+            env::remove_var("RITHMIC_TEST_URL");
+            env::remove_var("RITHMIC_TEST_ALT_URL");
         }
     }
 
@@ -446,8 +486,8 @@ mod tests {
         assert_eq!(config.ib_id, "test_ib");
         assert_eq!(config.user, "demo_user");
         assert_eq!(config.password, "demo_password");
-        assert_eq!(config.url, "wss://rprotocol.rithmic.com:443");
-        assert_eq!(config.beta_url, "wss://rprotocol-beta.rithmic.com:443");
+        assert_eq!(config.url, "wss://test-demo.example.com:443");
+        assert_eq!(config.beta_url, "wss://test-demo-alt.example.com:443");
         assert_eq!(config.system_name, "Rithmic Paper Trading");
         assert_eq!(config.env, RithmicEnv::Demo);
 
@@ -473,17 +513,22 @@ mod tests {
     fn test_from_env_missing_account_id() {
         cleanup_env_vars();
         unsafe {
-            env::set_var("FCM_ID", "test_fcm");
-            env::set_var("IB_ID", "test_ib");
+            env::set_var("RITHMIC_DEMO_FCM_ID", "test_fcm");
+            env::set_var("RITHMIC_DEMO_IB_ID", "test_ib");
             env::set_var("RITHMIC_DEMO_USER", "demo_user");
             env::set_var("RITHMIC_DEMO_PW", "demo_password");
+            env::set_var("RITHMIC_DEMO_URL", "wss://test-demo.example.com:443");
+            env::set_var(
+                "RITHMIC_DEMO_ALT_URL",
+                "wss://test-demo-alt.example.com:443",
+            );
         }
 
         let result = RithmicConfig::from_env(RithmicEnv::Demo);
         assert!(result.is_err());
 
         if let Err(ConfigError::MissingEnvVar(var)) = result {
-            assert_eq!(var, "RITHMIC_ACCOUNT_ID");
+            assert_eq!(var, "RITHMIC_DEMO_ACCOUNT_ID");
         } else {
             panic!("Expected MissingEnvVar error");
         }
@@ -495,9 +540,14 @@ mod tests {
     fn test_from_env_missing_credentials() {
         cleanup_env_vars();
         unsafe {
-            env::set_var("RITHMIC_ACCOUNT_ID", "test_account");
-            env::set_var("FCM_ID", "test_fcm");
-            env::set_var("IB_ID", "test_ib");
+            env::set_var("RITHMIC_DEMO_ACCOUNT_ID", "test_account");
+            env::set_var("RITHMIC_DEMO_FCM_ID", "test_fcm");
+            env::set_var("RITHMIC_DEMO_IB_ID", "test_ib");
+            env::set_var("RITHMIC_DEMO_URL", "wss://test-demo.example.com:443");
+            env::set_var(
+                "RITHMIC_DEMO_ALT_URL",
+                "wss://test-demo-alt.example.com:443",
+            );
         }
 
         let result = RithmicConfig::from_env(RithmicEnv::Demo);
@@ -513,6 +563,30 @@ mod tests {
     }
 
     #[test]
+    fn test_from_env_missing_url() {
+        cleanup_env_vars();
+        unsafe {
+            env::set_var("RITHMIC_DEMO_ACCOUNT_ID", "test_account");
+            env::set_var("RITHMIC_DEMO_FCM_ID", "test_fcm");
+            env::set_var("RITHMIC_DEMO_IB_ID", "test_ib");
+            env::set_var("RITHMIC_DEMO_USER", "demo_user");
+            env::set_var("RITHMIC_DEMO_PW", "demo_password");
+            // Deliberately not setting URL variables
+        }
+
+        let result = RithmicConfig::from_env(RithmicEnv::Demo);
+        assert!(result.is_err());
+
+        if let Err(ConfigError::MissingEnvVar(var)) = result {
+            assert_eq!(var, "RITHMIC_DEMO_URL");
+        } else {
+            panic!("Expected MissingEnvVar error");
+        }
+
+        cleanup_env_vars();
+    }
+
+    #[test]
     fn test_builder_complete() {
         let config = RithmicConfig::builder(RithmicEnv::Demo)
             .account_id("my_account")
@@ -520,6 +594,8 @@ mod tests {
             .ib_id("my_ib")
             .user("my_user")
             .password("my_password")
+            .url("wss://test.example.com:443")
+            .beta_url("wss://test-alt.example.com:443")
             .build()
             .unwrap();
 
@@ -529,10 +605,9 @@ mod tests {
         assert_eq!(config.user, "my_user");
         assert_eq!(config.password, "my_password");
         assert_eq!(config.env, RithmicEnv::Demo);
-
-        // Builder should set defaults for URLs and system_name
-        assert_eq!(config.url, "wss://rprotocol.rithmic.com:443");
-        assert_eq!(config.beta_url, "wss://rprotocol-beta.rithmic.com:443");
+        assert_eq!(config.url, "wss://test.example.com:443");
+        assert_eq!(config.beta_url, "wss://test-alt.example.com:443");
+        // Builder should set system_name default
         assert_eq!(config.system_name, "Rithmic Paper Trading");
     }
 
@@ -579,6 +654,8 @@ mod tests {
             .fcm_id("my_fcm")
             .ib_id("my_ib")
             .password("my_password")
+            .url("wss://test.example.com:443")
+            .beta_url("wss://test-alt.example.com:443")
             .build();
 
         assert!(result.is_err());
@@ -598,10 +675,12 @@ mod tests {
             .ib_id("test")
             .user("test")
             .password("test")
+            .url("wss://test.example.com:443")
+            .beta_url("wss://test-alt.example.com:443")
             .build()
             .unwrap();
 
-        assert_eq!(config.url, "wss://rprotocol.rithmic.com:443");
+        // Builder should set system_name default
         assert_eq!(config.system_name, "Rithmic Paper Trading");
     }
 
@@ -614,10 +693,12 @@ mod tests {
             .ib_id("test")
             .user("test")
             .password("test")
+            .url("wss://test.example.com:443")
+            .beta_url("wss://test-alt.example.com:443")
             .build()
             .unwrap();
 
-        assert_eq!(config.url, "wss://rprotocol.rithmic.com:443");
+        // Builder should set system_name default
         assert_eq!(config.system_name, "Rithmic 01");
     }
 
@@ -630,10 +711,12 @@ mod tests {
             .ib_id("test")
             .user("test")
             .password("test")
+            .url("wss://test.example.com:443")
+            .beta_url("wss://test-alt.example.com:443")
             .build()
             .unwrap();
 
-        assert_eq!(config.url, "wss://rituz00100.rithmic.com:443");
+        // Builder should set system_name default
         assert_eq!(config.system_name, "Rithmic Test");
     }
 
@@ -646,6 +729,8 @@ mod tests {
             .ib_id(String::from("my_ib"))
             .user(String::from("my_user"))
             .password(String::from("my_password"))
+            .url(String::from("wss://test.example.com:443"))
+            .beta_url(String::from("wss://test-alt.example.com:443"))
             .build()
             .unwrap();
 

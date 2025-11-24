@@ -25,7 +25,7 @@ Or manually add it to your `Cargo.toml` file.
 
 ```
 [dependencies]
-rithmic-rs = "0.5.1"
+rithmic-rs = "0.6.0"
 ```
 
 ## Breaking Changes
@@ -69,17 +69,34 @@ let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
 Required environment variables for `from_env()`:
 ```sh
 # For Demo environment
+RITHMIC_DEMO_ACCOUNT_ID=your_account_id
+RITHMIC_DEMO_FCM_ID=your_fcm_id
+RITHMIC_DEMO_IB_ID=your_ib_id
 RITHMIC_DEMO_USER=your_username
 RITHMIC_DEMO_PW=your_password
+RITHMIC_DEMO_URL=<provided_by_rithmic>
+RITHMIC_DEMO_ALT_URL=<provided_by_rithmic>
 
 # For Live environment
+RITHMIC_LIVE_ACCOUNT_ID=your_account_id
+RITHMIC_LIVE_FCM_ID=your_fcm_id
+RITHMIC_LIVE_IB_ID=your_ib_id
 RITHMIC_LIVE_USER=your_username
 RITHMIC_LIVE_PW=your_password
+RITHMIC_LIVE_URL=<provided_by_rithmic>
+RITHMIC_LIVE_ALT_URL=<provided_by_rithmic>
 
 # For Test environment
+RITHMIC_TEST_ACCOUNT_ID=your_account_id
+RITHMIC_TEST_FCM_ID=your_fcm_id
+RITHMIC_TEST_IB_ID=your_ib_id
 RITHMIC_TEST_USER=your_username
 RITHMIC_TEST_PW=your_password
+RITHMIC_TEST_URL=<provided_by_rithmic>
+RITHMIC_TEST_ALT_URL=<provided_by_rithmic>
 ```
+
+See `examples/.env.blank` for a template with all required variables and connection URLs.
 
 ### Connection Strategies
 
@@ -210,6 +227,12 @@ The repository includes several examples to help you get started. Examples use e
 ### Basic Connection
 ```bash
 cargo run --example connect
+```
+
+### Market Data
+```bash
+# Stream live market data
+cargo run --example market_data
 ```
 
 ### Historical Data
