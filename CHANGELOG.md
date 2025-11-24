@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+#### Environment Variable Structure
+- **Environment-specific configuration variables** for better multi-environment support
+  - All configuration variables now include environment prefix (DEMO, LIVE, TEST)
+  - Account variables: `RITHMIC_<ENV>_ACCOUNT_ID`, `RITHMIC_<ENV>_FCM_ID`, `RITHMIC_<ENV>_IB_ID`
+  - Connection variables: `RITHMIC_<ENV>_URL`, `RITHMIC_<ENV>_ALT_URL`
+  - User credentials: `RITHMIC_<ENV>_USER`, `RITHMIC_<ENV>_PW`
+  - Enables separate configurations for each environment
+  - Example: `RITHMIC_DEMO_ACCOUNT_ID`, `RITHMIC_LIVE_ACCOUNT_ID`, `RITHMIC_TEST_ACCOUNT_ID`
+
+#### Migration from Previous Versions
+**Old variable names (no longer supported):**
+- `RITHMIC_ACCOUNT_ID` → `RITHMIC_<ENV>_ACCOUNT_ID`
+- `FCM_ID` → `RITHMIC_<ENV>_FCM_ID`
+- `IB_ID` → `RITHMIC_<ENV>_IB_ID`
+
+**Example for Demo environment:**
+```bash
+# Old (0.6.0 and earlier)
+RITHMIC_ACCOUNT_ID=account123
+FCM_ID=fcm123
+IB_ID=ib123
+RITHMIC_DEMO_USER=user
+RITHMIC_DEMO_PW=pass
+
+# New (current)
+RITHMIC_DEMO_ACCOUNT_ID=account123
+RITHMIC_DEMO_FCM_ID=fcm123
+RITHMIC_DEMO_IB_ID=ib123
+RITHMIC_DEMO_USER=user
+RITHMIC_DEMO_PW=pass
+RITHMIC_DEMO_URL=<provided_by_rithmic>
+RITHMIC_DEMO_ALT_URL=<provided_by_rithmic>
+```
+
+See `examples/.env.blank` for complete template with all required variables.
+
 ## [0.6.0] - 2025-11-23
 
 > **📖 Migration Guide:** See [MIGRATION_0.6.0.md](MIGRATION_0.6.0.md) for migration instructions from 0.4.x or 0.5.x.

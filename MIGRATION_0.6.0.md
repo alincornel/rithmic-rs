@@ -54,17 +54,25 @@ let config = RithmicConfig::builder(RithmicEnv::Demo)
 **Required Environment Variables:**
 ```bash
 # For Demo
+RITHMIC_DEMO_ACCOUNT_ID=your_account
+RITHMIC_DEMO_FCM_ID=your_fcm
+RITHMIC_DEMO_IB_ID=your_ib
 RITHMIC_DEMO_USER=your_username
 RITHMIC_DEMO_PW=your_password
-RITHMIC_ACCOUNT_ID=your_account
-FCM_ID=your_fcm
-IB_ID=your_ib
+RITHMIC_DEMO_URL=<provided_by_rithmic>
+RITHMIC_DEMO_ALT_URL=<provided_by_rithmic>
 
 # For Live
+RITHMIC_LIVE_ACCOUNT_ID=your_account
+RITHMIC_LIVE_FCM_ID=your_fcm
+RITHMIC_LIVE_IB_ID=your_ib
 RITHMIC_LIVE_USER=your_username
 RITHMIC_LIVE_PW=your_password
-# plus RITHMIC_ACCOUNT_ID, FCM_ID, IB_ID
+RITHMIC_LIVE_URL=<provided_by_rithmic>
+RITHMIC_LIVE_ALT_URL=<provided_by_rithmic>
 ```
+
+See `examples/.env.blank` for connection URLs provided by Rithmic.
 
 ### 3. Update Plant Initialization
 
@@ -334,13 +342,15 @@ The deprecated `connection_info` module has been removed. Use `RithmicConfig` in
 This method was removed in 0.6.0. Connection health is now automatic - just monitor for `HeartbeatTimeout` events.
 
 ### "Missing environment variable"
-Ensure all required variables are set:
+Ensure all required variables are set for your environment:
 ```bash
+RITHMIC_DEMO_ACCOUNT_ID=...
+RITHMIC_DEMO_FCM_ID=...
+RITHMIC_DEMO_IB_ID=...
 RITHMIC_DEMO_USER=...
 RITHMIC_DEMO_PW=...
-RITHMIC_ACCOUNT_ID=...
-FCM_ID=...
-IB_ID=...
+RITHMIC_DEMO_URL=...
+RITHMIC_DEMO_ALT_URL=...
 ```
 
 ### Connection fails immediately
