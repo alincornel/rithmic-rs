@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.2] - 2025-12-20
+
 ### Added
 
 #### New Sender API Methods
@@ -463,13 +465,19 @@ Previous stable release. See git history for earlier changes.
 
 ## Version History Summary
 
+- **0.6.2** (2025-12-20): Expanded plant handle APIs, additional message types, OCO order support, and new sender methods
+- **0.6.1** (2025-11-24): Environment-specific configuration variables
+- **0.6.0** (2025-11-23): Major breaking changes - Removed deprecated code, simplified heartbeat handling, updated to dotenvy
 - **0.5.3** (2025-11-22): API expansion - Order history, RMS info, symbol search, trade routes, cancel all orders
 - **0.5.2** (2025-11-20): Heartbeat improvements - Optional heartbeat response handling, heartbeat timeout detection, internal refactoring
 - **0.5.1** (2025-11-18): Connection error handling improvements - ConnectionError variant, comprehensive WebSocket error detection, automatic error notifications
 - **0.5.0** (2025-11-16): Major stability and API improvements - Connection strategies, unified config, panic fixes, connection health monitoring
 - **0.4.2** (2025-11-15): Previous stable release
 
-[Unreleased]: https://github.com/pbeets/rithmic-rs/compare/v0.5.3...HEAD
+[Unreleased]: https://github.com/pbeets/rithmic-rs/compare/v0.6.2...HEAD
+[0.6.2]: https://github.com/pbeets/rithmic-rs/compare/v0.6.1...v0.6.2
+[0.6.1]: https://github.com/pbeets/rithmic-rs/compare/v0.6.0...v0.6.1
+[0.6.0]: https://github.com/pbeets/rithmic-rs/compare/v0.5.3...v0.6.0
 [0.5.3]: https://github.com/pbeets/rithmic-rs/compare/v0.5.2...v0.5.3
 [0.5.2]: https://github.com/pbeets/rithmic-rs/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/pbeets/rithmic-rs/compare/v0.5.0...v0.5.1
