@@ -1,19 +1,13 @@
 # Rust Rithmic R | Protocol API client
 
-Unofficial rust client for connecting to Rithmic's R | Protocol API.
-
 [![Crates.io](https://img.shields.io/crates/v/rithmic-rs.svg)](https://crates.io/crates/rithmic-rs)
 [![Documentation](https://docs.rs/rithmic-rs/badge.svg)](https://docs.rs/rithmic-rs)
 
-[Documentation](https://docs.rs/rithmic-rs/latest/rithmic_rs/) | [Rithmic APIs](https://www.rithmic.com/apis)
+[Official Rithmic API](https://www.rithmic.com/apis)
 
-Not all functionality has been implemented, but this is currently being used to trade live capital through Rithmic.
+Unofficial rust client for connecting to Rithmic's R | Protocol API.
 
-Only `order_plant`, `ticker_plant`, `pnl_plant`, `history_plant` are provided. Each plant uses the actor pattern so you'll want to start a plant, and communicate / call commands with it using it's handle. The crate is setup to be used with tokio channels.
-
-The `history_plant` supports loading both historical tick data and time bar data (1-second, 1-minute, 5-minute, daily, and weekly bars).
-
-## Installation
+## Setup
 
 You can install it from crates.io
 
@@ -25,7 +19,7 @@ Or manually add it to your `Cargo.toml` file.
 
 ```
 [dependencies]
-rithmic-rs = "0.6.1"
+rithmic-rs = "0.6.2"
 ```
 
 ## Usage
@@ -34,26 +28,17 @@ rithmic-rs = "0.6.1"
 
 Rithmic supports three types of account environments: `RithmicEnv::Demo` for paper trading, `RithmicEnv::Live` for funded accounts, and `RithmicEnv::Test` for the test environment before app approval.
 
-Configure your connection using the builder pattern:
+There are two ways to configure your connection: loading from environment variables (recommended) or using the builder pattern programmatically.
+
+Load configuration from environment variables:
 
 ```rust
 use rithmic_rs::{RithmicConfig, RithmicEnv};
 
-let config = RithmicConfig::builder()
-    .user("your_username".to_string())
-    .password("your_password".to_string())
-    .system_name("Rithmic Paper Trading".to_string())
-    .env(RithmicEnv::Demo)
-    .build()?;
-```
-
-Alternatively, you can load from environment variables using `from_env()`:
-
-```rust
 let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
 ```
 
-Required environment variables for `from_env()`:
+Required environment variables:
 ```sh
 # For Demo environment
 RITHMIC_DEMO_ACCOUNT_ID=your_account_id
@@ -85,12 +70,69 @@ RITHMIC_TEST_ALT_URL=<provided_by_rithmic>
 
 See `examples/.env.blank` for a template with all required variables and connection URLs.
 
+Alternatively, configure using the builder pattern:
+
+```rust
+use rithmic_rs::{RithmicConfig, RithmicEnv};
+
+let config = RithmicConfig::builder()
+    .user("your_username".to_string())
+    .password("your_password".to_string())
+    .system_name("Rithmic Paper Trading".to_string())
+    .env(RithmicEnv::Demo)
+    .build()?;
+```
+
 ### Connection Strategies
 
-The library provides three connection strategies:
+The library provides three connection strategies for **initial connection**:
 - **`Simple`**: Single connection attempt (recommended default, fast-fail)
 - **`Retry`**: Indefinite retries with exponential backoff capped at 60 seconds
 - **`AlternateWithRetry`**: Alternates between primary and beta URLs with retries
+
+**Note**: These strategies are for establishing the initial connection only. If you need to reconnect after a connection is lost, you must listen for disconnection events and manually reconnect:
+
+```rust
+use rithmic_rs::{RithmicMessage, RithmicConfig, RithmicEnv, ConnectStrategy, RithmicTickerPlant};
+
+async fn maintain_connection() -> Result<(), Box<dyn std::error::Error>> {
+    let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
+
+    loop {
+        // Connect and get handle
+        let ticker_plant = RithmicTickerPlant::connect(&config, ConnectStrategy::Retry).await?;
+        let handle = ticker_plant.get_handle();
+
+        handle.login().await?;
+        handle.subscribe("ESU5", "CME").await?;
+
+        // Process messages until disconnection
+        loop {
+            match handle.subscription_receiver.recv().await {
+                Ok(update) => {
+                    // Check for disconnection events
+                    match update.message {
+                        RithmicMessage::HeartbeatTimeout |
+                        RithmicMessage::ForcedLogout(_) |
+                        RithmicMessage::ConnectionError => {
+                            eprintln!("Connection lost, reconnecting...");
+                            break; // Exit inner loop to reconnect
+                        }
+                        RithmicMessage::LastTrade(trade) => {
+                            println!("Trade: {} @ {}", trade.trade_size.unwrap(), trade.trade_price.unwrap());
+                        }
+                        _ => {}
+                    }
+                }
+                Err(_) => break, // Channel closed, reconnect
+            }
+        }
+
+        // Brief delay before reconnecting
+        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+    }
+}
+```
 
 ### Quick Start
 
@@ -121,17 +163,18 @@ async fn stream_live_ticks() -> Result<(), Box<dyn std::error::Error>> {
                 }
 
                 // Handle connection health issues
+                // See Connection Strategies section for reconnection example
                 match update.message {
                     RithmicMessage::HeartbeatTimeout => {
-                        eprintln!("Connection timeout - must reconnect");
+                        eprintln!("Connection timeout detected");
                         break;
                     }
                     RithmicMessage::ForcedLogout(_) => {
-                        eprintln!("Forced logout - must reconnect");
+                        eprintln!("Forced logout detected");
                         break;
                     }
                     RithmicMessage::ConnectionError => {
-                        eprintln!("Connection error - must reconnect");
+                        eprintln!("Connection error detected");
                         break;
                     }
                     _ => {}
@@ -160,6 +203,52 @@ async fn stream_live_ticks() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 ```
+
+## Plants
+
+Rithmic's API is organized into specialized services called "plants". Each plant uses the actor pattern - you connect to a plant and communicate with it via a handle using tokio channels.
+
+### Design Philosophy
+
+This library intentionally does **not** provide a single unified client that manages all plants. Instead, each plant is an independent actor that you connect to and manage separately. This design choice prioritizes **flexibility** over convenience:
+
+- **Thread/task distribution**: Run different plants on different threads or async tasks based on your performance needs
+- **Selective connectivity**: Connect only to the plants you need (e.g., market data only, no order management)
+- **Independent lifecycle**: Each plant can be started, stopped, and reconnected independently
+- **Resource control**: Fine-grained control over connection pooling and resource allocation
+
+The trade-off is **reduced usability** - you must manage multiple connections and handles yourself rather than having a single client object. For most applications, this flexibility is worth the additional setup code.
+
+### Ticker Plant
+
+Real-time market data streaming:
+- **Market data subscriptions**: Last trades, best bid/offer (BBO), order book depth
+- **Symbol discovery**: Search symbols, list exchanges, get instruments by underlying
+- **Reference data**: Tick size tables, product codes, front month contracts, volume at price
+
+### Order Plant
+
+Order management and execution:
+- **Order types**: Market, limit, bracket orders, OCO (one-cancels-other) orders
+- **Order operations**: Place, modify, cancel orders, exit positions
+- **Order tracking**: Subscribe to order updates, show active orders, order history
+- **Risk management**: Account/product RMS info, trade routes, easy-to-borrow lists
+- **Agreements**: List, accept, and manage exchange agreements
+
+### PnL Plant
+
+Profit and loss monitoring:
+- **Position snapshots**: Current P&L for all positions
+- **Real-time updates**: Subscribe to account and instrument-level P&L changes
+
+### History Plant
+
+Historical market data:
+- **Tick data**: Load historical tick-by-tick data for any time range
+- **Time bars**: 1-second, 1-minute, 5-minute, daily, and weekly bars
+- **Volume profile**: Minute bars with volume profile data
+- **Bar subscriptions**: Subscribe to real-time time bar and tick bar updates
+
 
 ## Examples
 
