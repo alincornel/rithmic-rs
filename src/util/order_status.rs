@@ -1,94 +1,48 @@
 //! Order status types and utilities.
-//!
-//! This module provides a typed representation of order status values
-//! returned by Rithmic, along with helper methods for common status checks.
 
 use std::convert::Infallible;
 use std::fmt;
 use std::str::FromStr;
 
-/// Status string for an open order.
 pub const OPEN: &str = "open";
-
-/// Status string for a completed/filled order.
 pub const COMPLETE: &str = "complete";
-
-/// Status string for a cancelled order.
 pub const CANCELLED: &str = "cancelled";
-
-/// Status string for a pending order.
 pub const PENDING: &str = "pending";
-
-/// Status string for a rejected order.
 pub const REJECTED: &str = "rejected";
-
-/// Status string for a partially filled order.
 pub const PARTIAL: &str = "partial";
 
-/// Typed representation of order status.
+/// Order status with helpers for checking terminal/active states.
 ///
-/// This enum provides a type-safe way to work with order statuses,
-/// with helper methods for common status checks.
+/// Parses case-insensitively and handles common variations like "filled" for Complete
+/// and "canceled" (US spelling) for Cancelled.
 ///
 /// # Example
 /// ```
 /// use rithmic_rs::OrderStatus;
 ///
-/// let status: OrderStatus = "complete".parse().unwrap();
+/// let status: OrderStatus = "filled".parse().unwrap();
 /// assert_eq!(status, OrderStatus::Complete);
 /// assert!(status.is_terminal());
-/// assert!(!status.is_active());
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
 pub enum OrderStatus {
-    /// Order is open and working on the exchange.
     Open,
-    /// Order has been completely filled.
     Complete,
-    /// Order has been cancelled.
     Cancelled,
-    /// Order is pending (not yet acknowledged by exchange).
     Pending,
-    /// Order was rejected by the exchange or broker.
     Rejected,
-    /// Order is partially filled.
     Partial,
-    /// Unknown or unrecognized status.
     #[default]
     Unknown,
 }
 
 impl OrderStatus {
-    /// Returns true if this is a terminal status (order is no longer active).
-    ///
-    /// Terminal statuses are: Complete, Cancelled, Rejected.
-    ///
-    /// # Example
-    /// ```
-    /// use rithmic_rs::OrderStatus;
-    ///
-    /// assert!(OrderStatus::Complete.is_terminal());
-    /// assert!(OrderStatus::Cancelled.is_terminal());
-    /// assert!(OrderStatus::Rejected.is_terminal());
-    /// assert!(!OrderStatus::Open.is_terminal());
-    /// ```
+    /// Returns true if this is a terminal status (Complete, Cancelled, Rejected).
     pub fn is_terminal(&self) -> bool {
         matches!(self, Self::Complete | Self::Cancelled | Self::Rejected)
     }
 
-    /// Returns true if this is an active status (order may still fill).
-    ///
-    /// Active statuses are: Open, Pending, Partial.
-    ///
-    /// # Example
-    /// ```
-    /// use rithmic_rs::OrderStatus;
-    ///
-    /// assert!(OrderStatus::Open.is_active());
-    /// assert!(OrderStatus::Pending.is_active());
-    /// assert!(OrderStatus::Partial.is_active());
-    /// assert!(!OrderStatus::Complete.is_active());
-    /// ```
+    /// Returns true if this is an active status (Open, Pending, Partial).
     pub fn is_active(&self) -> bool {
         matches!(self, Self::Open | Self::Pending | Self::Partial)
     }
@@ -97,31 +51,6 @@ impl OrderStatus {
 impl FromStr for OrderStatus {
     type Err = Infallible;
 
-    /// Parse a status string into an OrderStatus enum.
-    ///
-    /// Matching is case-insensitive and handles common variations:
-    /// - "open" -> Open
-    /// - "complete", "filled" -> Complete
-    /// - "cancelled", "canceled" -> Cancelled
-    /// - "pending" -> Pending
-    /// - "rejected" -> Rejected
-    /// - "partial", "partially_filled" -> Partial
-    ///
-    /// Unrecognized values return `OrderStatus::Unknown`.
-    ///
-    /// # Example
-    /// ```
-    /// use rithmic_rs::OrderStatus;
-    ///
-    /// let status: OrderStatus = "Complete".parse().unwrap();
-    /// assert_eq!(status, OrderStatus::Complete);
-    ///
-    /// let status: OrderStatus = "FILLED".parse().unwrap();
-    /// assert_eq!(status, OrderStatus::Complete);
-    ///
-    /// let status: OrderStatus = "canceled".parse().unwrap();
-    /// assert_eq!(status, OrderStatus::Cancelled);
-    /// ```
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let status = match s.to_lowercase().as_str() {
             OPEN => Self::Open,
@@ -164,7 +93,6 @@ mod tests {
 
     #[test]
     fn test_parse_variations() {
-        // Complete variations
         assert_eq!(
             "complete".parse::<OrderStatus>().unwrap(),
             OrderStatus::Complete
@@ -174,7 +102,6 @@ mod tests {
             OrderStatus::Complete
         );
 
-        // Cancelled variations
         assert_eq!(
             "cancelled".parse::<OrderStatus>().unwrap(),
             OrderStatus::Cancelled
@@ -184,7 +111,6 @@ mod tests {
             OrderStatus::Cancelled
         );
 
-        // Partial variations
         assert_eq!(
             "partial".parse::<OrderStatus>().unwrap(),
             OrderStatus::Partial
@@ -228,7 +154,6 @@ mod tests {
 
     #[test]
     fn test_roundtrip() {
-        // Verify that Display output can be parsed back to the same variant
         for status in [
             OrderStatus::Open,
             OrderStatus::Complete,

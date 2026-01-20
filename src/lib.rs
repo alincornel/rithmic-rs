@@ -139,10 +139,7 @@ mod request_handler;
 /// connection health events.
 pub mod rti;
 
-/// Utility types and helpers for working with Rithmic data.
-///
-/// This module provides convenience types that help translate Rithmic's raw
-/// protocol data into more ergonomic forms for downstream consumers.
+/// Utility types for working with Rithmic data.
 pub mod util;
 
 /// WebSocket connectivity layer
@@ -169,4 +166,4 @@ pub use api::{
 };
 
 // Re-export utility types for convenience
-pub use util::{rithmic_to_unix_nanos, rithmic_to_unix_nanos_precise, InstrumentInfo, OrderStatus};
+pub use util::{InstrumentInfo, OrderStatus, rithmic_to_unix_nanos, rithmic_to_unix_nanos_precise};
