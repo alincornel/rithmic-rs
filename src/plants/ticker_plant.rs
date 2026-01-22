@@ -956,7 +956,10 @@ impl RithmicTickerPlantHandle {
         };
 
         let _ = self.sender.send(command).await;
-        let response = rx.await.unwrap().unwrap().remove(0);
+        let response = rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0);
 
         Ok(response)
     }
@@ -977,7 +980,10 @@ impl RithmicTickerPlantHandle {
         };
 
         let _ = self.sender.send(command).await;
-        let response = rx.await.unwrap().unwrap().remove(0);
+        let response = rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0);
 
         if response.error.is_none() {
             let _ = self.sender.send(TickerPlantCommand::SetLogin).await;
@@ -1015,7 +1021,7 @@ impl RithmicTickerPlantHandle {
         };
 
         let _ = self.sender.send(command).await;
-        let mut r = rx.await.unwrap().unwrap();
+        let mut r = rx.await.map_err(|_| "Connection closed".to_string())??;
         let _ = self.sender.send(TickerPlantCommand::Close).await;
         let response = r.remove(0);
 
@@ -1045,7 +1051,10 @@ impl RithmicTickerPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Subscribe to order book depth-by-order updates for a specific symbol
@@ -1072,7 +1081,10 @@ impl RithmicTickerPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Request a snapshot of the order book depth-by-order for a specific symbol
@@ -1098,7 +1110,7 @@ impl RithmicTickerPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     async fn update_heartbeat(&self, seconds: u64) {
@@ -1139,7 +1151,7 @@ impl RithmicTickerPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// List exchanges available to the specified user
@@ -1159,7 +1171,7 @@ impl RithmicTickerPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Get instruments by underlying symbol
@@ -1188,7 +1200,7 @@ impl RithmicTickerPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Subscribe to market data for all instruments of an underlying
@@ -1223,7 +1235,10 @@ impl RithmicTickerPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Get tick size type table
@@ -1246,7 +1261,7 @@ impl RithmicTickerPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Get product codes
@@ -1272,7 +1287,7 @@ impl RithmicTickerPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Get volume at price data
@@ -1298,7 +1313,7 @@ impl RithmicTickerPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Get auxiliary reference data for a symbol
@@ -1324,7 +1339,10 @@ impl RithmicTickerPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Get reference data for a symbol
@@ -1353,7 +1371,10 @@ impl RithmicTickerPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Get front month contract
@@ -1384,7 +1405,10 @@ impl RithmicTickerPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Get Rithmic system gateway info
@@ -1407,7 +1431,10 @@ impl RithmicTickerPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 }
 

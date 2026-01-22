@@ -1307,7 +1307,10 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Log in to the Rithmic Order plant
@@ -1326,7 +1329,10 @@ impl RithmicOrderPlantHandle {
         };
 
         let _ = self.sender.send(command).await;
-        let response = rx.await.unwrap().unwrap().remove(0);
+        let response = rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0);
 
         if response.error.is_none() {
             let _ = self.sender.send(OrderPlantCommand::SetLogin).await;
@@ -1364,7 +1370,7 @@ impl RithmicOrderPlantHandle {
         };
 
         let _ = self.sender.send(command).await;
-        let mut r = rx.await.unwrap().unwrap();
+        let mut r = rx.await.map_err(|_| "Connection closed".to_string())??;
         let _ = self.sender.send(OrderPlantCommand::Close).await;
 
         Ok(r.remove(0))
@@ -1383,7 +1389,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Subscribe to order status updates
@@ -1399,7 +1405,10 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Subscribe to bracket order status updates
@@ -1415,7 +1424,10 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Place a bracket order (entry order with profit target and stop loss)
@@ -1438,7 +1450,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Modify an existing order
@@ -1461,7 +1473,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Cancel an order
@@ -1484,7 +1496,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Adjust the profit target level of a bracket order
@@ -1506,7 +1518,10 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Adjust the stop loss level of a bracket order
@@ -1528,7 +1543,10 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Request a list of all open orders
@@ -1544,7 +1562,10 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     async fn update_heartbeat(&self, seconds: u64) {
@@ -1566,7 +1587,10 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Get account RMS (Risk Management System) information
@@ -1582,7 +1606,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Get product RMS (Risk Management System) information
@@ -1598,7 +1622,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Get available trade routes
@@ -1621,7 +1645,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Get dates for which order history is available
@@ -1637,7 +1661,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Get order history summary for a specific date
@@ -1660,7 +1684,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Get detailed order history for a specific order
@@ -1686,7 +1710,10 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Get general order history
@@ -1709,7 +1736,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Place a new single order (without brackets)
@@ -1754,7 +1781,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Place an OCO (One Cancels Other) order pair
@@ -1782,7 +1809,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Show all active bracket orders
@@ -1798,7 +1825,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Show all active bracket stop orders
@@ -1814,7 +1841,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Exit an entire position for a given symbol
@@ -1842,7 +1869,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Link multiple orders together
@@ -1864,7 +1891,10 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Get the easy-to-borrow list for short selling
@@ -1887,7 +1917,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Modify order reference data (user tag)
@@ -1913,7 +1943,10 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Get or set order session configuration
@@ -1936,7 +1969,10 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Replay historical executions
@@ -1962,7 +1998,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Subscribe to account RMS updates
@@ -1985,7 +2021,10 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Get login information for the current session
@@ -2001,7 +2040,10 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// List unaccepted agreements
@@ -2019,7 +2061,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// List accepted agreements
@@ -2037,7 +2079,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Accept a market data agreement
@@ -2063,7 +2105,10 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// Show details of an agreement
@@ -2083,7 +2128,7 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 
     /// Set Rithmic market data self-certification status
@@ -2109,7 +2154,10 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        Ok(rx.await.unwrap().unwrap().remove(0))
+        Ok(rx
+            .await
+            .map_err(|_| "Connection closed".to_string())??
+            .remove(0))
     }
 
     /// List exchange permissions for a user
@@ -2135,6 +2183,6 @@ impl RithmicOrderPlantHandle {
 
         let _ = self.sender.send(command).await;
 
-        rx.await.unwrap()
+        rx.await.map_err(|_| "Connection closed".to_string())?
     }
 }
