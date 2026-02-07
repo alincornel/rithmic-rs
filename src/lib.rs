@@ -29,7 +29,7 @@
 //!
 //!     // Login and subscribe to market data
 //!     handle.login().await?;
-//!     handle.subscribe("ESM1", "CME").await?;
+//!     handle.subscribe("ESH6", "CME").await?;
 //!
 //!     // Process real-time updates
 //!     loop {

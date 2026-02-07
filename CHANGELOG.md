@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.2] - 2026-02-07
+
 ### Added
 
 #### New Order API
@@ -24,6 +26,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Ticker Plant Unsubscribe Methods
 - **`unsubscribe(symbol, exchange)`**: Unsubscribe from market data for a symbol
 - **`unsubscribe_order_book(symbol, exchange)`**: Unsubscribe from order book depth-by-order updates
+
+#### Serde-Compatible Order Types
+- **`OrderSide`**, **`OrderType`**, **`TimeInForce`**: New enums with optional serde support
+  - Flexible parsing via `FromStr` (e.g., `"buy"`, `"BUY"`, `"B"` all parse to `OrderSide::Buy`)
+  - `From` impls for conversion to protobuf request types
+- **`OrderStatus::Expired`**: New variant added to the `OrderStatus` enum
+- `OrderStatus` now supports optional serde serialization/deserialization
 
 ### Deprecated
 - **`place_new_order()`**: Use `place_order(RithmicOrder)` instead
@@ -56,7 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Optional Serde Support
 - Added `serde` feature flag for serialization/deserialization support
 - `RithmicEnv` derives `Serialize`/`Deserialize` when enabled with lowercase rename
-- Enable with: `rithmic-rs = { version = "0.7.1", features = ["serde"] }`
+- Enable with: `rithmic-rs = { version = "0.7.2", features = ["serde"] }`
 
 #### New Example
 - **`bracket_order.rs`**: Demonstrates placing bracket orders with typed enums
@@ -594,6 +603,7 @@ Previous stable release. See git history for earlier changes.
 
 ## Version History Summary
 
+- **0.7.2** (2026-02-07): New RithmicOrder API with trigger prices and trailing stops, ticker plant unsubscribe methods, serde-compatible order types
 - **0.7.1** (2026-01-23): New utility module (InstrumentInfo, OrderStatus, timestamp helpers), RithmicResponse helper methods, optional serde support, improved error handling
 - **0.7.0** (2026-01-08): Breaking changes - Order types now use enums instead of raw integers, cleaner public API exports
 - **0.6.2** (2025-12-20): Expanded plant handle APIs, additional message types, OCO order support, and new sender methods
@@ -605,7 +615,8 @@ Previous stable release. See git history for earlier changes.
 - **0.5.0** (2025-11-16): Major stability and API improvements - Connection strategies, unified config, panic fixes, connection health monitoring
 - **0.4.2** (2025-11-15): Previous stable release
 
-[Unreleased]: https://github.com/pbeets/rithmic-rs/compare/v0.7.1...HEAD
+[Unreleased]: https://github.com/pbeets/rithmic-rs/compare/v0.7.2...HEAD
+[0.7.2]: https://github.com/pbeets/rithmic-rs/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/pbeets/rithmic-rs/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/pbeets/rithmic-rs/compare/v0.6.2...v0.7.0
 [0.6.2]: https://github.com/pbeets/rithmic-rs/compare/v0.6.1...v0.6.2

@@ -259,7 +259,7 @@ pub(crate) enum OrderPlantCommand {
 ///         profit_ticks: 8,
 ///         qty: 1,
 ///         stop_ticks: 4,
-///         symbol: "ESM1".to_string(),
+///         symbol: "ESH6".to_string(),
 ///     };
 ///
 ///     handle.place_bracket_order(bracket_order).await?;
@@ -1767,7 +1767,7 @@ impl RithmicOrderPlantHandle {
     ///
     /// # Arguments
     /// * `exchange` - The exchange code (e.g., "CME")
-    /// * `symbol` - The trading symbol (e.g., "ESM1")
+    /// * `symbol` - The trading symbol (e.g., "ESH6")
     /// * `qty` - Order quantity
     /// * `price` - Order price (ignored for market orders)
     /// * `action` - Buy or Sell
@@ -1830,7 +1830,7 @@ impl RithmicOrderPlantHandle {
     /// use rithmic_rs::{RithmicOrder, NewOrderTransactionType, NewOrderPriceType};
     ///
     /// let order = RithmicOrder {
-    ///     symbol: "ESM5".to_string(),
+    ///     symbol: "ESH6".to_string(),
     ///     exchange: "CME".to_string(),
     ///     quantity: 1,
     ///     price: 5000.0,
@@ -1919,7 +1919,7 @@ impl RithmicOrderPlantHandle {
     /// This closes all open positions for the specified symbol/exchange.
     ///
     /// # Arguments
-    /// * `symbol` - The trading symbol (e.g., "ESM1")
+    /// * `symbol` - The trading symbol (e.g., "ESH6")
     /// * `exchange` - The exchange code (e.g., "CME")
     ///
     /// # Returns

@@ -15,7 +15,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-rithmic-rs = "0.7.1"
+rithmic-rs = "0.7.2"
 ```
 
 Set your environment variables:
@@ -44,7 +44,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut handle = plant.get_handle();
 
     handle.login().await?;
-    handle.subscribe("ESU5", "CME").await?;
+    handle.subscribe("ESH6", "CME").await?;
 
     while let Ok(update) = handle.subscription_receiver.recv().await {
         println!("{:?}", update.message);
@@ -69,7 +69,10 @@ This library uses the actor pattern where each Rithmic service runs independentl
 
 ```rust
 // Subscribe to real-time quotes
-handle.subscribe("ESU5", "CME").await?;
+handle.subscribe("ESH6", "CME").await?;
+
+// Unsubscribe when done
+handle.unsubscribe("ESH6", "CME").await?;
 
 // Symbol discovery
 let symbols = handle.search_symbols("ES", Some("CME"), None, None, None).await?;
@@ -79,21 +82,35 @@ let front_month = handle.get_front_month_contract("ES", "CME", false).await?;
 ### Order Plant
 
 ```rust
-// Place orders
-handle.place_limit_order("ESU5", "CME", Side::Buy, 5000.0, 1).await?;
+use rithmic_rs::{RithmicOrder, NewOrderTransactionType, NewOrderPriceType};
+
+// Place orders using the RithmicOrder API
+let order = RithmicOrder {
+    symbol: "ESH6".to_string(),
+    exchange: "CME".to_string(),
+    quantity: 1,
+    price: 5000.0,
+    transaction_type: NewOrderTransactionType::Buy,
+    price_type: NewOrderPriceType::Limit,
+    user_tag: "my-order".to_string(),
+    ..Default::default()
+};
+handle.place_order(order).await?;
+
+// Bracket orders, OCO orders
 handle.place_bracket_order(...).await?;
 
 // Manage positions
 handle.cancel_order(order_id).await?;
-handle.exit_position("ESU5", "CME").await?;
+handle.exit_position("ESH6", "CME").await?;
 ```
 
 ### History Plant
 
 ```rust
 // Load historical data (bar_type, period, start_time, end_time as i32 unix seconds)
-let bars = handle.load_time_bars("ESU5", "CME", BarType::MinuteBar, 5, start, end).await?;
-let ticks = handle.load_ticks("ESU5", "CME", start, end).await?;
+let bars = handle.load_time_bars("ESH6", "CME", BarType::MinuteBar, 5, start, end).await?;
+let ticks = handle.load_ticks("ESH6", "CME", start, end).await?;
 ```
 
 ### PnL Plant
