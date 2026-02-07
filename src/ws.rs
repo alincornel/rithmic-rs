@@ -33,9 +33,9 @@ const MAX_BACKOFF_SECS: u64 = 60;
 /// Connection strategy for connecting to Rithmic servers.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ConnectStrategy {
-    /// Single connection attempt. Recommended for most users.
+    /// Single connection attempt. Fast-fail, no retries.
     Simple,
-    /// Retry same URL indefinitely with exponential backoff (capped at 60s).
+    /// Retry same URL indefinitely with exponential backoff (capped at 60s). Recommended for most users.
     Retry,
     /// Alternates between primary and beta URLs indefinitely. Useful when main server has issues.
     AlternateWithRetry,

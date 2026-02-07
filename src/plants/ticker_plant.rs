@@ -169,7 +169,7 @@ pub(crate) enum TickerPlantCommand {
 ///     let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
 ///
 ///     // Connect to the ticker plant
-///     let ticker_plant = RithmicTickerPlant::connect(&config, ConnectStrategy::Simple).await?;
+///     let ticker_plant = RithmicTickerPlant::connect(&config, ConnectStrategy::Retry).await?;
 ///     let mut handle = ticker_plant.get_handle();
 ///
 ///     // Login to the ticker plant
@@ -250,7 +250,7 @@ impl RithmicTickerPlant {
     /// #[tokio::main]
     /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
     ///     let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
-    ///     let ticker_plant = RithmicTickerPlant::connect(&config, ConnectStrategy::Simple).await?;
+    ///     let ticker_plant = RithmicTickerPlant::connect(&config, ConnectStrategy::Retry).await?;
     ///     Ok(())
     /// }
     /// ```

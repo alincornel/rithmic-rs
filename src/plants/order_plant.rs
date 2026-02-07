@@ -241,7 +241,7 @@ pub(crate) enum OrderPlantCommand {
 /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ///     let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
 ///
-///     let order_plant = RithmicOrderPlant::connect(&config, ConnectStrategy::Simple).await?;
+///     let order_plant = RithmicOrderPlant::connect(&config, ConnectStrategy::Retry).await?;
 ///     let mut handle = order_plant.get_handle();
 ///
 ///     handle.login().await?;

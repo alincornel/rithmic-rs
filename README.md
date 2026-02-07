@@ -40,7 +40,7 @@ use rithmic_rs::{RithmicConfig, RithmicEnv, ConnectStrategy, RithmicTickerPlant}
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let config = RithmicConfig::from_env(RithmicEnv::Demo)?; // for live RithmicEnv::Live
-    let plant = RithmicTickerPlant::connect(&config, ConnectStrategy::Simple).await?;
+    let plant = RithmicTickerPlant::connect(&config, ConnectStrategy::Retry).await?;
     let mut handle = plant.get_handle();
 
     handle.login().await?;
@@ -124,8 +124,8 @@ let snapshot = handle.pnl_position_snapshots().await?;
 ## Connection Strategies
 
 Three strategies for initial connection:
-- **`Simple`**: Single attempt, fast-fail (recommended default)
-- **`Retry`**: Exponential backoff, capped at 60 seconds
+- **`Simple`**: Single attempt, fast-fail
+- **`Retry`**: Exponential backoff, capped at 60 seconds (recommended default)
 - **`AlternateWithRetry`**: Alternates between primary and alt URLs
 
 ### Reconnection

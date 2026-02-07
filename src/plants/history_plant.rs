@@ -122,7 +122,7 @@ pub(crate) enum HistoryPlantCommand {
 ///     let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
 ///
 ///     // Step 2: Connect to the history plant
-///     let history_plant = RithmicHistoryPlant::connect(&config, ConnectStrategy::Simple).await?;
+///     let history_plant = RithmicHistoryPlant::connect(&config, ConnectStrategy::Retry).await?;
 ///
 ///     // Step 3: Get a handle to interact with the plant
 ///     let mut handle = history_plant.get_handle();
