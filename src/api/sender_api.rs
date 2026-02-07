@@ -4,15 +4,6 @@ use prost::Message;
 use crate::{
     config::{RithmicConfig, RithmicEnv},
     rti::{
-        request_account_list::UserType,
-        request_bracket_order, request_cancel_all_orders, request_depth_by_order_updates,
-        request_easy_to_borrow_list,
-        request_login::SysInfraType,
-        request_market_data_update::{Request, UpdateBits},
-        request_market_data_update_by_underlying, request_modify_order, request_new_order,
-        request_oco_order, request_pn_l_position_updates, request_search_symbols,
-        request_tick_bar_replay::{BarSubType, BarType, Direction, TimeOrder},
-        request_tick_bar_update, request_time_bar_replay, request_time_bar_update,
         RequestAcceptAgreement, RequestAccountList, RequestAccountRmsInfo,
         RequestAccountRmsUpdates, RequestAuxilliaryReferenceData, RequestBracketOrder,
         RequestCancelAllOrders, RequestCancelOrder, RequestDepthByOrderSnapshot,
@@ -34,6 +25,15 @@ use crate::{
         RequestTimeBarReplay, RequestTimeBarUpdate, RequestTradeRoutes,
         RequestUpdateStopBracketLevel, RequestUpdateTargetBracketLevel,
         RequestVolumeProfileMinuteBars,
+        request_account_list::UserType,
+        request_bracket_order, request_cancel_all_orders, request_depth_by_order_updates,
+        request_easy_to_borrow_list,
+        request_login::SysInfraType,
+        request_market_data_update::{Request, UpdateBits},
+        request_market_data_update_by_underlying, request_modify_order, request_new_order,
+        request_oco_order, request_pn_l_position_updates, request_search_symbols,
+        request_tick_bar_replay::{BarSubType, BarType, Direction, TimeOrder},
+        request_tick_bar_update, request_time_bar_replay, request_time_bar_update,
     },
 };
 
