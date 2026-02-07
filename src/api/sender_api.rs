@@ -315,7 +315,7 @@ impl RithmicSenderApi {
     /// Returns the volume profile (volume at each price level) for a symbol.
     ///
     /// # Arguments
-    /// * `symbol` - The trading symbol (e.g., "ESH5")
+    /// * `symbol` - The trading symbol (e.g., "ESH6")
     /// * `exchange` - The exchange code (e.g., "CME")
     ///
     /// # Returns
@@ -342,7 +342,7 @@ impl RithmicSenderApi {
     /// Returns additional reference data for a symbol.
     ///
     /// # Arguments
-    /// * `symbol` - The trading symbol (e.g., "ESH5")
+    /// * `symbol` - The trading symbol (e.g., "ESH6")
     /// * `exchange` - The exchange code (e.g., "CME")
     ///
     /// # Returns
@@ -430,7 +430,7 @@ impl RithmicSenderApi {
     ///
     /// # Arguments
     /// * `exchange` - The exchange code (e.g., "CME")
-    /// * `symbol` - The trading symbol (e.g., "ESM1")
+    /// * `symbol` - The trading symbol (e.g., "ESH6")
     /// * `qty` - Order quantity
     /// * `price` - Order price (ignored for market orders)
     /// * `action` - Buy or Sell
@@ -629,7 +629,7 @@ impl RithmicSenderApi {
     /// by placing a market order in the opposite direction.
     ///
     /// # Arguments
-    /// * `symbol` - The trading symbol (e.g., "ESM1")
+    /// * `symbol` - The trading symbol (e.g., "ESH6")
     /// * `exchange` - The exchange code (e.g., "CME")
     ///
     /// # Returns
@@ -882,7 +882,7 @@ impl RithmicSenderApi {
     /// Returns minute bar data with volume profile information.
     ///
     /// # Arguments
-    /// * `symbol` - The trading symbol (e.g., "ESH5")
+    /// * `symbol` - The trading symbol (e.g., "ESH6")
     /// * `exchange` - The exchange code (e.g., "CME")
     /// * `bar_type_period` - The period for the bars
     /// * `start_index_sec` - Start time in unix seconds
@@ -1220,7 +1220,7 @@ impl RithmicSenderApi {
     /// tick size, point value, trading hours, and other symbol specifications.
     ///
     /// # Arguments
-    /// * `symbol` - The trading symbol (e.g., "ESH5")
+    /// * `symbol` - The trading symbol (e.g., "ESH6")
     /// * `exchange` - The exchange code (e.g., "CME")
     ///
     /// # Returns
@@ -1274,7 +1274,7 @@ impl RithmicSenderApi {
     /// Receive real-time time bar (OHLCV) updates for a symbol.
     ///
     /// # Arguments
-    /// * `symbol` - The trading symbol (e.g., "ESH5")
+    /// * `symbol` - The trading symbol (e.g., "ESH6")
     /// * `exchange` - The exchange code (e.g., "CME")
     /// * `bar_type` - The type of time bar (SecondBar, MinuteBar, DailyBar, WeeklyBar)
     /// * `bar_type_period` - The period for the bar type (e.g., 1 for 1-minute bars)
@@ -1310,7 +1310,7 @@ impl RithmicSenderApi {
     /// Receive real-time tick bar updates for a symbol.
     ///
     /// # Arguments
-    /// * `symbol` - The trading symbol (e.g., "ESH5")
+    /// * `symbol` - The trading symbol (e.g., "ESH6")
     /// * `exchange` - The exchange code (e.g., "CME")
     /// * `bar_type` - The type of tick bar
     /// * `bar_sub_type` - Sub-type of the bar

@@ -82,7 +82,7 @@ pub(crate) enum PnlPlantCommand {
 ///     let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
 ///
 ///     // Step 2: Connect to the PnL plant
-///     let pnl_plant = RithmicPnlPlant::connect(&config, ConnectStrategy::Simple).await?;
+///     let pnl_plant = RithmicPnlPlant::connect(&config, ConnectStrategy::Retry).await?;
 ///
 ///     // Step 3: Get a handle to interact with the plant
 ///     let mut handle = pnl_plant.get_handle();

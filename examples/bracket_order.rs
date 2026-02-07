@@ -86,7 +86,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Connect to the order plant (use Demo for paper trading)
     let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
-    let order_plant = RithmicOrderPlant::connect(&config, ConnectStrategy::Simple).await?;
+    let order_plant = RithmicOrderPlant::connect(&config, ConnectStrategy::Retry).await?;
     let handle = order_plant.get_handle();
 
     // Login to the order plant

@@ -28,7 +28,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenvy::dotenv().ok();
     tracing_subscriber::fmt().init();
 
-    let symbol = env::var("SYMBOL").unwrap_or_else(|_| "ESH5".to_string());
+    let symbol = env::var("SYMBOL").unwrap_or_else(|_| "ESH6".to_string());
     let exchange = env::var("EXCHANGE").unwrap_or_else(|_| "CME".to_string());
     let start_time: i32 = env::var("START_TIME")
         .ok()
@@ -37,7 +37,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let end_time = start_time + (23 * 60 * 60);
 
     let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
-    let history_plant = RithmicHistoryPlant::connect(&config, ConnectStrategy::Simple).await?;
+    let history_plant = RithmicHistoryPlant::connect(&config, ConnectStrategy::Retry).await?;
     let handle = history_plant.get_handle();
     handle.login().await?;
 

@@ -23,13 +23,13 @@
 //!     // Load configuration from environment variables
 //!     let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
 //!
-//!     // Connect with Simple strategy (recommended default)
-//!     let ticker_plant = RithmicTickerPlant::connect(&config, ConnectStrategy::Simple).await?;
+//!     // Connect with Retry strategy (recommended default)
+//!     let ticker_plant = RithmicTickerPlant::connect(&config, ConnectStrategy::Retry).await?;
 //!     let mut handle = ticker_plant.get_handle();
 //!
 //!     // Login and subscribe to market data
 //!     handle.login().await?;
-//!     handle.subscribe("ESM1", "CME").await?;
+//!     handle.subscribe("ESH6", "CME").await?;
 //!
 //!     // Process real-time updates
 //!     loop {
@@ -67,8 +67,8 @@
 //!
 //! The library provides three connection strategies:
 //!
-//! - [`ConnectStrategy::Simple`]: Single connection attempt (recommended default, fast-fail)
-//! - [`ConnectStrategy::Retry`]: Indefinite retries with exponential backoff capped at 60s
+//! - [`ConnectStrategy::Simple`]: Single connection attempt, fast-fail
+//! - [`ConnectStrategy::Retry`]: Indefinite retries with exponential backoff capped at 60s (recommended default)
 //! - [`ConnectStrategy::AlternateWithRetry`]: Alternates between primary and beta URLs
 //!
 //! ## Configuration

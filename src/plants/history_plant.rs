@@ -122,7 +122,7 @@ pub(crate) enum HistoryPlantCommand {
 ///     let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
 ///
 ///     // Step 2: Connect to the history plant
-///     let history_plant = RithmicHistoryPlant::connect(&config, ConnectStrategy::Simple).await?;
+///     let history_plant = RithmicHistoryPlant::connect(&config, ConnectStrategy::Retry).await?;
 ///
 ///     // Step 3: Get a handle to interact with the plant
 ///     let mut handle = history_plant.get_handle();
@@ -140,7 +140,7 @@ pub(crate) enum HistoryPlantCommand {
 ///     let one_hour_ago = now - 3600;
 ///
 ///     let ticks = handle.load_ticks(
-///         "ESM1".to_string(),
+///         "ESH6".to_string(),
 ///         "CME".to_string(),
 ///         one_hour_ago,
 ///         now,
@@ -808,7 +808,7 @@ impl RithmicHistoryPlantHandle {
     /// Load historical tick data for a specific symbol and time range
     ///
     /// # Arguments
-    /// * `symbol` - The trading symbol (e.g., "ESM1")
+    /// * `symbol` - The trading symbol (e.g., "ESH6")
     /// * `exchange` - The exchange code (e.g., "CME")
     /// * `start_time_sec` - Start time in Unix timestamp (seconds)
     /// * `end_time_sec` - End time in Unix timestamp (seconds)
@@ -840,7 +840,7 @@ impl RithmicHistoryPlantHandle {
     /// Load historical time bar data for a specific symbol and time range
     ///
     /// # Arguments
-    /// * `symbol` - The trading symbol (e.g., "ESM1")
+    /// * `symbol` - The trading symbol (e.g., "ESH6")
     /// * `exchange` - The exchange code (e.g., "CME")
     /// * `bar_type` - The type of time bar (SecondBar, MinuteBar, DailyBar, WeeklyBar)
     /// * `bar_type_period` - The period for the bar type (e.g., 1 for 1-minute bars, 5 for 5-minute bars)
@@ -878,7 +878,7 @@ impl RithmicHistoryPlantHandle {
     /// Load volume profile minute bars
     ///
     /// # Arguments
-    /// * `symbol` - The trading symbol (e.g., "ESH5")
+    /// * `symbol` - The trading symbol (e.g., "ESH6")
     /// * `exchange` - The exchange code (e.g., "CME")
     /// * `bar_type_period` - The period for the bars
     /// * `start_time_sec` - Start time in Unix timestamp (seconds)
@@ -942,7 +942,7 @@ impl RithmicHistoryPlantHandle {
     /// Subscribe to live time bar updates
     ///
     /// # Arguments
-    /// * `symbol` - The trading symbol (e.g., "ESH5")
+    /// * `symbol` - The trading symbol (e.g., "ESH6")
     /// * `exchange` - The exchange code (e.g., "CME")
     /// * `bar_type` - The type of time bar (SecondBar, MinuteBar, DailyBar, WeeklyBar)
     /// * `bar_type_period` - The period for the bar type (e.g., 1 for 1-minute bars)
@@ -980,7 +980,7 @@ impl RithmicHistoryPlantHandle {
     /// Subscribe to live tick bar updates
     ///
     /// # Arguments
-    /// * `symbol` - The trading symbol (e.g., "ESH5")
+    /// * `symbol` - The trading symbol (e.g., "ESH6")
     /// * `exchange` - The exchange code (e.g., "CME")
     /// * `bar_type` - The type of tick bar
     /// * `bar_sub_type` - Sub-type of the bar

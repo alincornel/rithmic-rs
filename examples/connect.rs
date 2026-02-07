@@ -13,7 +13,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     tracing_subscriber::fmt().init();
 
-    let ticker_plant = RithmicTickerPlant::connect(&config, ConnectStrategy::Simple).await?;
+    let ticker_plant = RithmicTickerPlant::connect(&config, ConnectStrategy::Retry).await?;
     let ticker_plant_handle = ticker_plant.get_handle();
 
     let resp = ticker_plant_handle.login().await;

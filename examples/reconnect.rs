@@ -1,5 +1,8 @@
 //! Example: Persistent connection with automatic reconnection and re-subscription
 //!
+//! Uses `ConnectStrategy::Retry` so the initial connection retries automatically
+//! with exponential backoff. The outer loop handles reconnection after disconnects.
+//!
 //! Run with: cargo run --example reconnect
 //!
 //! This example runs indefinitely. Press Ctrl+C to exit.
@@ -20,29 +23,29 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Track subscriptions to restore after reconnect
     let mut subscriptions: HashSet<(String, String)> = HashSet::new();
-    let symbol = env::var("SYMBOL").unwrap_or_else(|_| "ESH5".to_string());
+    let symbol = env::var("SYMBOL").unwrap_or_else(|_| "ESH6".to_string());
     let exchange = env::var("EXCHANGE").unwrap_or_else(|_| "CME".to_string());
     subscriptions.insert((symbol, exchange));
 
     // Outer loop: reconnection
     loop {
-        let plant = match RithmicTickerPlant::connect(&config, ConnectStrategy::Simple).await {
+        // Retry strategy handles backoff automatically
+        let plant = match RithmicTickerPlant::connect(&config, ConnectStrategy::Retry).await {
             Ok(p) => p,
             Err(e) => {
                 error!("Connect failed: {}", e);
-                tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
                 continue;
             }
         };
 
         let mut handle = plant.get_handle();
 
-        if handle.login().await.is_err() {
-            tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
+        if let Err(e) = handle.login().await {
+            error!("Login failed: {}", e);
             continue;
         }
 
-        // Re-subscribe to all tracked symbols
+        // Subscribe to all tracked symbols
         for (symbol, exchange) in &subscriptions {
             let _ = handle.subscribe(symbol, exchange).await;
             info!("Subscribed to {} on {}", symbol, exchange);
@@ -67,7 +70,5 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 _ => {}
             }
         }
-
-        tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
     }
 }

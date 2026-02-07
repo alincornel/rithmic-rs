@@ -12,7 +12,7 @@ use crate::rti::{
 /// use rithmic_rs::{RithmicOcoOrderLeg, OcoTransactionType, OcoDuration, OcoPriceType};
 ///
 /// let take_profit = RithmicOcoOrderLeg {
-///     symbol: "ESM5".to_string(),
+///     symbol: "ESH6".to_string(),
 ///     exchange: "CME".to_string(),
 ///     quantity: 1,
 ///     price: 5020.0,
@@ -24,7 +24,7 @@ use crate::rti::{
 /// };
 ///
 /// let stop_loss = RithmicOcoOrderLeg {
-///     symbol: "ESM5".to_string(),
+///     symbol: "ESH6".to_string(),
 ///     exchange: "CME".to_string(),
 ///     quantity: 1,
 ///     price: 4980.0,
@@ -39,7 +39,7 @@ use crate::rti::{
 /// ```
 #[derive(Debug, Clone)]
 pub struct RithmicOcoOrderLeg {
-    /// Trading symbol (e.g., "ESM5")
+    /// Trading symbol (e.g., "ESH6")
     pub symbol: String,
     /// Exchange code (e.g., "CME")
     pub exchange: String,
@@ -70,7 +70,7 @@ pub struct RithmicOcoOrderLeg {
 /// use rithmic_rs::{RithmicBracketOrder, BracketTransactionType, BracketDuration, BracketPriceType};
 ///
 /// let order = RithmicBracketOrder {
-///     symbol: "ESM5".to_string(),
+///     symbol: "ESH6".to_string(),
 ///     exchange: "CME".to_string(),
 ///     action: BracketTransactionType::Buy,
 ///     qty: 1,
@@ -102,7 +102,7 @@ pub struct RithmicBracketOrder {
     pub qty: i32,
     /// Stop loss distance in ticks from entry
     pub stop_ticks: i32,
-    /// Trading symbol (e.g., "ESM5")
+    /// Trading symbol (e.g., "ESH6")
     pub symbol: String,
 }
 
@@ -115,7 +115,7 @@ pub struct RithmicBracketOrder {
 ///
 /// let modification = RithmicModifyOrder {
 ///     id: "123456".to_string(),  // basket_id from order notification
-///     symbol: "ESM5".to_string(),
+///     symbol: "ESH6".to_string(),
 ///     exchange: "CME".to_string(),
 ///     qty: 2,
 ///     price: 5005.0,
@@ -187,7 +187,7 @@ pub struct TrailingStop {
 /// use rithmic_rs::{RithmicOrder, NewOrderTransactionType, NewOrderPriceType};
 ///
 /// let order = RithmicOrder {
-///     symbol: "ESM5".to_string(),
+///     symbol: "ESH6".to_string(),
 ///     exchange: "CME".to_string(),
 ///     quantity: 1,
 ///     price: 5000.0,
@@ -205,7 +205,7 @@ pub struct TrailingStop {
 /// use rithmic_rs::{RithmicOrder, NewOrderTransactionType, NewOrderPriceType};
 ///
 /// let order = RithmicOrder {
-///     symbol: "ESM5".to_string(),
+///     symbol: "ESH6".to_string(),
 ///     exchange: "CME".to_string(),
 ///     quantity: 1,
 ///     price: 4980.0,                // Limit price after trigger
@@ -223,7 +223,7 @@ pub struct TrailingStop {
 /// use rithmic_rs::{RithmicOrder, NewOrderTransactionType, NewOrderPriceType, TrailingStop};
 ///
 /// let order = RithmicOrder {
-///     symbol: "ESM5".to_string(),
+///     symbol: "ESH6".to_string(),
 ///     exchange: "CME".to_string(),
 ///     quantity: 1,
 ///     price: 0.0,  // Not used for trailing stops
@@ -236,7 +236,7 @@ pub struct TrailingStop {
 /// ```
 #[derive(Debug, Clone)]
 pub struct RithmicOrder {
-    /// Trading symbol (e.g., "ESM5")
+    /// Trading symbol (e.g., "ESH6")
     pub symbol: String,
     /// Exchange code (e.g., "CME")
     pub exchange: String,
