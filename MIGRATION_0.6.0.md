@@ -48,11 +48,16 @@ let config = RithmicConfig::builder(RithmicEnv::Demo)
     .ib_id("your_ib")
     .user("your_user")
     .password("your_password")
+    .app_name("your_app_name")
+    .app_version("1")
     .build()?;
 ```
 
 **Required Environment Variables:**
 ```bash
+RITHMIC_APP_NAME=your_app_name
+RITHMIC_APP_VERSION=1
+
 # For Demo
 RITHMIC_DEMO_ACCOUNT_ID=your_account
 RITHMIC_DEMO_FCM_ID=your_fcm

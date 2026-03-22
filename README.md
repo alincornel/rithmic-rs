@@ -21,6 +21,9 @@ rithmic-rs = "0.7.2"
 Set your environment variables:
 
 ```sh
+RITHMIC_APP_NAME=your_app_name
+RITHMIC_APP_VERSION=1
+
 RITHMIC_DEMO_ACCOUNT_ID=your_account_id
 RITHMIC_DEMO_FCM_ID=your_fcm_id
 RITHMIC_DEMO_IB_ID=your_ib_id
