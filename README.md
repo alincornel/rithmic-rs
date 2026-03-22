@@ -139,7 +139,7 @@ match handle.subscribe("ESH6", "CME").await {
 }
 ```
 
-`RithmicError` implements `std::error::Error`, so `?` propagation works unchanged (as shown in the quick start above).
+`RithmicError` implements `std::error::Error`, so `?` works in functions returning `Box<dyn Error>`.
 
 ## Connection Strategies
 

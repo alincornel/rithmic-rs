@@ -111,8 +111,8 @@
 //! }
 //! ```
 //!
-//! `RithmicError` implements [`std::error::Error`], so `?` propagation works
-//! unchanged in functions returning `Box<dyn Error>`.
+//! `RithmicError` implements [`std::error::Error`], so `?` works in functions
+//! returning `Box<dyn Error>`.
 //!
 //! ## Module Organization
 //!
