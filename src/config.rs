@@ -66,13 +66,9 @@ impl FromStr for RithmicEnv {
 #[derive(Debug, Clone)]
 #[non_exhaustive]
 pub enum ConfigError {
-    /// A required environment variable is missing
-    MissingEnvVar(String),
-    /// An invalid environment string was provided
     InvalidEnvironment(String),
-    /// A configuration value is invalid
     InvalidValue { var: String, reason: String },
-    /// A required field is missing when building
+    MissingEnvVar(String),
     MissingField(String),
 }
 
@@ -119,6 +115,7 @@ pub struct RithmicConfig {
     pub system_name: String,
     pub env: RithmicEnv,
 
+    // App fields
     pub app_name: String,
     pub app_version: String,
 }

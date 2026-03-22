@@ -44,11 +44,11 @@ pub(crate) const USER_TYPE: i32 = 3;
 #[derive(Debug, Clone)]
 pub(crate) struct RithmicSenderApi {
     account_id: String,
+    app_name: String,
+    app_version: String,
     env: RithmicEnv,
     fcm_id: String,
     ib_id: String,
-    app_name: String,
-    app_version: String,
     message_id_counter: u64,
 }
 
@@ -56,11 +56,11 @@ impl RithmicSenderApi {
     pub(crate) fn new(config: &RithmicConfig) -> Self {
         RithmicSenderApi {
             account_id: config.account_id.clone(),
+            app_name: config.app_name.clone(),
+            app_version: config.app_version.clone(),
             env: config.env,
             fcm_id: config.fcm_id.clone(),
             ib_id: config.ib_id.clone(),
-            app_name: config.app_name.clone(),
-            app_version: config.app_version.clone(),
             message_id_counter: 0,
         }
     }
