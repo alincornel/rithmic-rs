@@ -17,6 +17,8 @@
 //!     .ib_id("my_ib")
 //!     .user("my_user")
 //!     .password("my_password")
+//!     .app_name("my_app")
+//!     .app_version("1")
 //!     .build()?;
 //! # Ok::<(), Box<dyn std::error::Error>>(())
 //! ```
@@ -64,13 +66,9 @@ impl FromStr for RithmicEnv {
 #[derive(Debug, Clone)]
 #[non_exhaustive]
 pub enum ConfigError {
-    /// A required environment variable is missing
-    MissingEnvVar(String),
-    /// An invalid environment string was provided
     InvalidEnvironment(String),
-    /// A configuration value is invalid
     InvalidValue { var: String, reason: String },
-    /// A required field is missing when building
+    MissingEnvVar(String),
     MissingField(String),
 }
 
@@ -116,6 +114,10 @@ pub struct RithmicConfig {
     pub password: String,
     pub system_name: String,
     pub env: RithmicEnv,
+
+    // App fields
+    pub app_name: String,
+    pub app_version: String,
 }
 
 impl RithmicConfig {
@@ -152,6 +154,10 @@ impl RithmicConfig {
     /// - `RITHMIC_TEST_PW`: Test password
     /// - `RITHMIC_TEST_URL`: Test WebSocket URL
     /// - `RITHMIC_TEST_ALT_URL`: Test alternative/beta WebSocket URL
+    ///
+    /// Shared (all environments):
+    /// - `RITHMIC_APP_NAME` (required): Application name registered with Rithmic
+    /// - `RITHMIC_APP_VERSION` (required): Application version
     ///
     /// # Example
     /// ```no_run
@@ -219,6 +225,12 @@ impl RithmicConfig {
             ),
         };
 
+        let app_name = env::var("RITHMIC_APP_NAME")
+            .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_APP_NAME".to_string()))?;
+
+        let app_version = env::var("RITHMIC_APP_VERSION")
+            .map_err(|_| ConfigError::MissingEnvVar("RITHMIC_APP_VERSION".to_string()))?;
+
         Ok(Self {
             account_id,
             fcm_id,
@@ -229,6 +241,8 @@ impl RithmicConfig {
             password,
             system_name,
             env,
+            app_name,
+            app_version,
         })
     }
 
@@ -246,6 +260,8 @@ impl RithmicConfig {
     ///     .ib_id("my_ib")
     ///     .user("my_user")
     ///     .password("my_password")
+    ///     .app_name("my_app")
+    ///     .app_version("1")
     ///     .build()?;
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
@@ -266,6 +282,8 @@ pub struct RithmicConfigBuilder {
     user: Option<String>,
     password: Option<String>,
     system_name: Option<String>,
+    app_name: Option<String>,
+    app_version: Option<String>,
 }
 
 impl RithmicConfigBuilder {
@@ -333,6 +351,16 @@ impl RithmicConfigBuilder {
         self
     }
 
+    pub fn app_name(mut self, app_name: impl Into<String>) -> Self {
+        self.app_name = Some(app_name.into());
+        self
+    }
+
+    pub fn app_version(mut self, app_version: impl Into<String>) -> Self {
+        self.app_version = Some(app_version.into());
+        self
+    }
+
     /// Build the configuration.
     ///
     /// Returns an error if any required fields are missing.
@@ -365,6 +393,12 @@ impl RithmicConfigBuilder {
             system_name: self
                 .system_name
                 .ok_or_else(|| ConfigError::MissingField("system_name".to_string()))?,
+            app_name: self
+                .app_name
+                .ok_or_else(|| ConfigError::MissingField("app_name".to_string()))?,
+            app_version: self
+                .app_version
+                .ok_or_else(|| ConfigError::MissingField("app_version".to_string()))?,
         })
     }
 }
@@ -388,6 +422,8 @@ mod tests {
                 "RITHMIC_DEMO_ALT_URL",
                 "wss://test-demo-alt.example.com:443",
             );
+            env::set_var("RITHMIC_APP_NAME", "test_app");
+            env::set_var("RITHMIC_APP_VERSION", "1");
         }
     }
 
@@ -403,6 +439,8 @@ mod tests {
                 "RITHMIC_LIVE_ALT_URL",
                 "wss://test-live-alt.example.com:443",
             );
+            env::set_var("RITHMIC_APP_NAME", "test_app");
+            env::set_var("RITHMIC_APP_VERSION", "1");
         }
     }
 
@@ -429,6 +467,8 @@ mod tests {
             env::remove_var("RITHMIC_TEST_PW");
             env::remove_var("RITHMIC_TEST_URL");
             env::remove_var("RITHMIC_TEST_ALT_URL");
+            env::remove_var("RITHMIC_APP_NAME");
+            env::remove_var("RITHMIC_APP_VERSION");
         }
     }
 
@@ -607,6 +647,8 @@ mod tests {
             .password("my_password")
             .url("wss://test.example.com:443")
             .beta_url("wss://test-alt.example.com:443")
+            .app_name("test_app")
+            .app_version("1")
             .build()
             .unwrap();
 
@@ -633,6 +675,8 @@ mod tests {
             .url("wss://custom.example.com:443")
             .beta_url("wss://custom-beta.example.com:443")
             .system_name("Custom System")
+            .app_name("test_app")
+            .app_version("1")
             .build()
             .unwrap();
 
@@ -688,6 +732,8 @@ mod tests {
             .password("test")
             .url("wss://test.example.com:443")
             .beta_url("wss://test-alt.example.com:443")
+            .app_name("test_app")
+            .app_version("1")
             .build()
             .unwrap();
 
@@ -706,6 +752,8 @@ mod tests {
             .password("test")
             .url("wss://test.example.com:443")
             .beta_url("wss://test-alt.example.com:443")
+            .app_name("test_app")
+            .app_version("1")
             .build()
             .unwrap();
 
@@ -724,6 +772,8 @@ mod tests {
             .password("test")
             .url("wss://test.example.com:443")
             .beta_url("wss://test-alt.example.com:443")
+            .app_name("test_app")
+            .app_version("1")
             .build()
             .unwrap();
 
@@ -742,6 +792,8 @@ mod tests {
             .password(String::from("my_password"))
             .url(String::from("wss://test.example.com:443"))
             .beta_url(String::from("wss://test-alt.example.com:443"))
+            .app_name("test_app")
+            .app_version("1")
             .build()
             .unwrap();
 

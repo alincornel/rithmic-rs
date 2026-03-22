@@ -87,6 +87,8 @@
 //!         .user("your_user".to_string())
 //!         .password("your_password".to_string())
 //!         .system_name("Rithmic Paper Trading".to_string())
+//!         .app_name("your_app_name".to_string())
+//!         .app_version("1".to_string())
 //!         .build()?;
 //!     Ok(())
 //! }
