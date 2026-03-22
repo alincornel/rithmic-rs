@@ -193,7 +193,7 @@ pub use ws::ConnectStrategy;
 
 // Re-export API types
 pub use api::{
-    BracketDuration, BracketPriceType, BracketTransactionType, EasyToBorrowRequest,
+    BracketDuration, BracketPriceType, BracketTransactionType, EasyToBorrowRequest, LoginConfig,
     ModifyPriceType, NewOrderDuration, NewOrderPriceType, NewOrderTransactionType, OcoDuration,
     OcoPriceType, OcoTransactionType, RithmicBracketOrder, RithmicCancelOrder, RithmicModifyOrder,
     RithmicOcoOrderLeg, RithmicOrder, RithmicResponse, TrailingStop,
