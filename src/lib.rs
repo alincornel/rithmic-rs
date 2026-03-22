@@ -102,16 +102,17 @@
 //!
 //! match handle.subscribe("ESH6", "CME").await {
 //!     Ok(resp) => { /* success */ }
-//!     Err(RithmicError::ConnectionClosed) => { handle.abort(); /* reconnect */ }
-//!     Err(RithmicError::SendFailed) => { handle.abort(); /* reconnect */ }
-//!     Err(RithmicError::EmptyResponse) => { /* unexpected empty response */ }
-//!     Err(RithmicError::ServerError(msg)) => { eprintln!("Server: {}", msg); }
-//!     Err(e) => { eprintln!("Error: {}", e); }
+//!     Err(RithmicError::ConnectionClosed | RithmicError::SendFailed) => {
+//!         handle.abort();
+//!         // reconnect — see examples/reconnect.rs
+//!     }
+//!     Err(RithmicError::ServerError(msg)) => eprintln!("Server rejected: {msg}"),
+//!     Err(e) => eprintln!("{e}"),
 //! }
 //! ```
 //!
-//! `RithmicError` implements [`std::error::Error`] and [`Display`](std::fmt::Display),
-//! so it works with `?` in functions returning `Box<dyn Error>`.
+//! `RithmicError` implements [`std::error::Error`], so `?` propagation works
+//! unchanged in functions returning `Box<dyn Error>`.
 //!
 //! ## Module Organization
 //!

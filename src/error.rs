@@ -1,41 +1,38 @@
 use std::fmt;
 
-/// Error type returned by plant handle methods.
-///
-/// Enables consumers to programmatically distinguish error kinds without
-/// parsing strings.
-///
-/// # Example
+/// Typed errors returned by all plant handle methods.
 ///
 /// ```ignore
 /// match handle.subscribe("ESH6", "CME").await {
 ///     Ok(resp) => { /* success */ }
-///     Err(RithmicError::ConnectionClosed) => { handle.abort(); /* reconnect */ }
-///     Err(RithmicError::SendFailed) => { handle.abort(); /* reconnect */ }
-///     Err(RithmicError::ServerError(msg)) => { eprintln!("Server: {}", msg); }
-///     Err(e) => { eprintln!("Error: {}", e); }
+///     Err(RithmicError::ConnectionClosed | RithmicError::SendFailed) => {
+///         handle.abort();
+///         // reconnect — see examples/reconnect.rs
+///     }
+///     Err(RithmicError::ServerError(msg)) => eprintln!("rejected: {msg}"),
+///     Err(e) => eprintln!("{e}"),
 /// }
 /// ```
 #[derive(Debug, Clone)]
 #[non_exhaustive]
 pub enum RithmicError {
-    /// The plant actor has shut down; the response channel was dropped.
+    /// The plant's WebSocket connection is gone; pending requests will never complete.
     ConnectionClosed,
-    /// The WebSocket send failed after the request was registered.
+    /// WebSocket send failed after the request was registered.
     SendFailed,
-    /// The server returned an empty response vector.
+    /// Server returned an empty response where at least one was expected.
     EmptyResponse,
-    /// The Rithmic server returned a protocol-level error (rp_code text).
+    /// Protocol-level rejection from Rithmic (the `rp_code` text).
     ServerError(String),
 }
 
 impl fmt::Display for RithmicError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            RithmicError::ConnectionClosed => write!(f, "Connection closed"),
+            RithmicError::ConnectionClosed => write!(f, "connection closed"),
             RithmicError::SendFailed => write!(f, "WebSocket send failed"),
-            RithmicError::EmptyResponse => write!(f, "Empty response"),
-            RithmicError::ServerError(msg) => write!(f, "Server error: {}", msg),
+            RithmicError::EmptyResponse => write!(f, "empty response"),
+            RithmicError::ServerError(msg) => write!(f, "server error: {msg}"),
         }
     }
 }
