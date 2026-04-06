@@ -78,11 +78,12 @@
 //! Use [`RithmicConfig`] for modern, ergonomic configuration:
 //!
 //! ```no_run
-//! use rithmic_rs::{RithmicConfig, RithmicEnv};
+//! use rithmic_rs::{RithmicAccount, RithmicConfig, RithmicEnv};
 //!
 //! fn example() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 //!     // From environment variables
 //!     let config = RithmicConfig::from_env(RithmicEnv::Demo)?;
+//!     let account = RithmicAccount::from_env(RithmicEnv::Demo)?;
 //!
 //!     // Or using builder pattern
 //!     let config = RithmicConfig::builder(RithmicEnv::Demo)
@@ -92,6 +93,9 @@
 //!         .app_name("your_app_name".to_string())
 //!         .app_version("1".to_string())
 //!         .build()?;
+//!
+//!     let account = RithmicAccount::new("your_fcm", "your_ib", "your_account");
+//!     let _ = (config, account);
 //!     Ok(())
 //! }
 //! ```
@@ -195,7 +199,7 @@ pub use plants::pnl_plant::{RithmicPnlPlant, RithmicPnlPlantHandle};
 pub use plants::ticker_plant::{RithmicTickerPlant, RithmicTickerPlantHandle};
 
 // Re-export modern configuration types for convenience
-pub use config::{ConfigError, RithmicConfig, RithmicConfigBuilder, RithmicEnv};
+pub use config::{ConfigError, RithmicAccount, RithmicConfig, RithmicConfigBuilder, RithmicEnv};
 
 // Re-export error types
 pub use error::RithmicError;
