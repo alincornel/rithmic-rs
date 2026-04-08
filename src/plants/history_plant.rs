@@ -31,6 +31,8 @@ use futures_util::{
     stream::{SplitSink, SplitStream},
 };
 
+use std::time::Duration;
+
 use tokio::{
     net::TcpStream,
     sync::{broadcast, mpsc, oneshot},
@@ -277,14 +279,16 @@ impl HistoryPlant {
 
 impl HistoryPlant {
     async fn send_or_fail(&mut self, msg: Message, request_id: &str) {
-        if self.rithmic_sender.send(msg).await.is_err() {
-            error!(
-                "history_plant: WebSocket send failed for request {}",
-                request_id
-            );
-
-            self.request_handler
-                .fail_request(request_id, RithmicError::SendFailed);
+        match tokio::time::timeout(Duration::from_secs(10), self.rithmic_sender.send(msg)).await {
+            Ok(Ok(_)) => {}
+            Ok(Err(e)) => {
+                error!("history_plant: WebSocket send failed for request {}: {e}", request_id);
+                self.request_handler.fail_request(request_id, RithmicError::SendFailed);
+            }
+            Err(_) => {
+                error!("history_plant: WebSocket send TIMED OUT (10s) for request {}", request_id);
+                self.request_handler.fail_request(request_id, RithmicError::SendFailed);
+            }
         }
     }
 }
@@ -302,7 +306,20 @@ impl PlantActor for HistoryPlant {
               }
               _ = self.ping_interval.tick() => {
                 self.ping_manager.sent();
-                let _ = self.rithmic_sender.send(Message::Ping(vec![].into())).await;
+                match tokio::time::timeout(
+                    Duration::from_secs(10),
+                    self.rithmic_sender.send(Message::Ping(vec![].into())),
+                ).await {
+                    Ok(Ok(_)) => {}
+                    Ok(Err(e)) => {
+                        error!("history_plant: ping send failed: {e} — connection dead");
+                        break;
+                    }
+                    Err(_) => {
+                        error!("history_plant: ping send TIMED OUT (10s) — forcing reconnect");
+                        break;
+                    }
+                }
               }
               _ = async {
                 if let Some(timeout_at) = self.ping_manager.next_timeout_at() {

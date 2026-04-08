@@ -34,6 +34,8 @@ use tokio_tungstenite::{
     tungstenite::{Error, Message, error::ProtocolError},
 };
 
+use std::time::Duration;
+
 use tokio::{
     net::TcpStream,
     sync::{broadcast, mpsc, oneshot},
@@ -359,14 +361,16 @@ impl TickerPlant {
 
 impl TickerPlant {
     async fn send_or_fail(&mut self, msg: Message, request_id: &str) {
-        if self.rithmic_sender.send(msg).await.is_err() {
-            error!(
-                "ticker_plant: WebSocket send failed for request {}",
-                request_id
-            );
-
-            self.request_handler
-                .fail_request(request_id, RithmicError::SendFailed);
+        match tokio::time::timeout(Duration::from_secs(10), self.rithmic_sender.send(msg)).await {
+            Ok(Ok(_)) => {}
+            Ok(Err(e)) => {
+                error!("ticker_plant: WebSocket send failed for request {}: {e}", request_id);
+                self.request_handler.fail_request(request_id, RithmicError::SendFailed);
+            }
+            Err(_) => {
+                error!("ticker_plant: WebSocket send TIMED OUT (10s) for request {}", request_id);
+                self.request_handler.fail_request(request_id, RithmicError::SendFailed);
+            }
         }
     }
 }
@@ -388,7 +392,40 @@ impl PlantActor for TickerPlant {
                 }
                 _ = self.ping_interval.tick() => {
                     self.ping_manager.sent();
-                    let _ = self.rithmic_sender.send(Message::Ping(vec![].into())).await;
+                    match tokio::time::timeout(
+                        Duration::from_secs(10),
+                        self.rithmic_sender.send(Message::Ping(vec![].into())),
+                    ).await {
+                        Ok(Ok(_)) => {}
+                        Ok(Err(e)) => {
+                            error!("ticker_plant: ping send failed: {e} — connection dead");
+                            let error_response = RithmicResponse {
+                                request_id: "ping_send_failed".to_string(),
+                                message: RithmicMessage::HeartbeatTimeout,
+                                is_update: true,
+                                has_more: false,
+                                multi_response: false,
+                                error: Some(format!("Ping send failed: {e}")),
+                                source: self.rithmic_receiver_api.source.clone(),
+                            };
+                            let _ = self.subscription_sender.send(error_response);
+                            break;
+                        }
+                        Err(_) => {
+                            error!("ticker_plant: ping send TIMED OUT (10s) — connection dead, forcing reconnect");
+                            let error_response = RithmicResponse {
+                                request_id: "ping_send_timeout".to_string(),
+                                message: RithmicMessage::HeartbeatTimeout,
+                                is_update: true,
+                                has_more: false,
+                                multi_response: false,
+                                error: Some("Ping send timed out after 10s — TCP half-open".to_string()),
+                                source: self.rithmic_receiver_api.source.clone(),
+                            };
+                            let _ = self.subscription_sender.send(error_response);
+                            break;
+                        }
+                    }
                 }
                 _ = async {
                     if let Some(timeout_at) = self.ping_manager.next_timeout_at() {
