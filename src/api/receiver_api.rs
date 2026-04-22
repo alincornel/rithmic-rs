@@ -265,6 +265,17 @@ impl RithmicReceiverApi {
             }
         };
 
+        // Diagnostic: log every incoming template on history_plant so we can
+        // tell whether Rithmic is emitting live TimeBar (template 250) after
+        // subscribe_time_bar_updates. Ticker/order/pnl plants are high-volume
+        // and logged separately; filter here to keep noise down.
+        if self.source == "history_plant" {
+            tracing::info!(
+                "history_plant RX template_id={}",
+                parsed_message.template_id
+            );
+        }
+
         let response = match parsed_message.template_id {
             11 => {
                 let resp = ResponseLogin::decode(payload)
